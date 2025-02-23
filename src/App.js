@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useParams, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useParams, Navigate, Link } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
 import EditMode from './components/EditMode';
 import RollMode from './components/RollMode';
 import Home from './components/Home';
-import IconButton from './components/IconButton';
+import Sidebar from './components/Sidebar';
 import { loadTables, saveTables } from './utils/tableUtils';
-import { TEXT } from './constants/text';
 
 // Wrapper component for table-specific routes
 const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHistory, rollStyle, rollHistory }) => {
@@ -29,16 +28,6 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHisto
       </div>
       <Routes>
         <Route 
-          path="edit" 
-          element={
-            <EditMode
-              table={table}
-              onUpdate={onUpdateTable}
-              onDelete={onDeleteTable}
-            />
-          }
-        />
-        <Route 
           path="roll" 
           element={
             <RollMode
@@ -50,19 +39,32 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHisto
             />
           }
         />
+        <Route 
+          path="edit" 
+          element={
+            <EditMode
+              table={table}
+              onUpdate={onUpdateTable}
+              onDelete={onDeleteTable}
+            />
+          }
+        />
         <Route path="*" element={<Navigate to="roll" replace />} />
       </Routes>
     </>
   );
 };
 
-function App() {
+const App = () => {
   const [tables, setTables] = useState([]);
   const [rollStyle, setRollStyle] = useState('normal');
   const [rollHistory, setRollHistory] = useState({});
 
   useEffect(() => {
-    setTables(loadTables());
+    const savedTables = loadTables();
+    if (savedTables) {
+      setTables(savedTables);
+    }
   }, []);
 
   useEffect(() => {
@@ -110,29 +112,10 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <div className="sidebar">
-          <Link to="/" className="sidebar-header">
-            <h2>{TEXT.sidebar.title}</h2>
-          </Link>
-          <IconButton to="/import" text={TEXT.sidebar.importButton} />
-          <ul className="table-list">
-            {tables.map(table => (
-              <li key={table.id}>
-                <Link 
-                  to={`/table/${table.id}/roll`}
-                  className="table-item"
-                >
-                  <div className="table-info">
-                    <span className="table-name">{table.name}</span>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
+        <Sidebar tables={tables} />
         <div className="main-content">
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route 
               path="/import" 
               element={<ImportMode onImport={handleImport} />} 
@@ -149,15 +132,13 @@ function App() {
                   rollStyle={rollStyle}
                   rollHistory={rollHistory}
                 />
-              }
+              } 
             />
-            <Route path="/" element={<Home />} />
-            <Route path="/" element={<div className="welcome">Select a table or import a new one to begin</div>} />
           </Routes>
         </div>
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
