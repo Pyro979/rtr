@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-import TableEditor from './TableEditor';
+import TableEditorWithPreview from './shared/TableEditorWithPreview';
 import { parseTableItems } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
+import '../styles/shared.css';
+import './ImportMode.css';
 
 const ImportMode = ({ onImport }) => {
   const navigate = useNavigate();
@@ -37,8 +39,8 @@ const ImportMode = ({ onImport }) => {
   return (
     <div className="import-mode">
       <h2>{TEXT.import.title}</h2>
-      <div className="form-group">
-        <label htmlFor="tableName">{TEXT.import.nameLabel}</label>
+      
+      <div className="name-input-group">
         <input
           id="tableName"
           type="text"
@@ -48,18 +50,28 @@ const ImportMode = ({ onImport }) => {
             setError('');
           }}
           placeholder={TEXT.import.namePlaceholder}
+          className="table-name-input"
         />
+        <button 
+          onClick={handleImport}
+          className="action-button primary-button"
+          disabled={!tableName.trim() || importText.trim() === ''}
+        >
+          {TEXT.import.submitButton}
+        </button>
       </div>
-      <TableEditor
+
+      <TableEditorWithPreview
         text={importText}
         onTextChange={(text) => {
           setImportText(text);
           setError('');
         }}
+        tableName={tableName}
         placeholder={TEXT.import.contentPlaceholder}
       />
+
       {error && <div className="error-message">{error}</div>}
-      <button onClick={handleImport}>{TEXT.import.submitButton}</button>
     </div>
   );
 };

@@ -5,15 +5,15 @@ export const TEXT = {
     description: 'Create, manage, and roll on custom random tables for your tabletop roleplaying games.'
   },
   sidebar: {
-    title: 'Your Tables',
-    importButton: 'Import New Table'
+    title: 'Random Table Roller',
+    importButton: 'Import Table'
   },
   import: {
     title: 'Import Table',
     nameLabel: 'Table Name',
-    namePlaceholder: 'Enter a name for your table',
-    contentPlaceholder: 'Paste your table items here, one per line',
-    submitButton: 'Import Table',
+    namePlaceholder: 'Enter table name...',
+    contentPlaceholder: 'Enter table items, one per line...',
+    submitButton: 'Import',
     errors: {
       nameRequired: 'Table name is required',
       itemsRequired: 'At least one item is required'
@@ -21,9 +21,13 @@ export const TEXT = {
   },
   edit: {
     title: 'Edit Table',
-    contentPlaceholder: 'Edit your table items here, one per line',
+    contentPlaceholder: 'Enter table items, one per line...',
     saveButton: 'Save Changes',
-    deleteButton: 'Delete Table'
+    deleteButton: 'Delete Table',
+    errors: {
+      nameRequired: 'Table name is required',
+      itemsRequired: 'At least one item is required'
+    }
   },
   roll: {
     title: 'Roll Table',

@@ -1,0 +1,53 @@
+.editor-preview-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.editor-section, .preview-section {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.preview-header {
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.preview-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.preview-content {
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.preview-content ol {
+  margin: 0;
+  padding-left: 30px;
+}
+
+.preview-content li {
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.preview-placeholder {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .editor-preview-container {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,28 +1,84 @@
-import React from 'react';
-import TableEditor from './TableEditor';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import TableEditorWithPreview from './shared/TableEditorWithPreview';
+import { TEXT } from '../constants/text';
+import '../styles/shared.css';
+import './EditMode.css';
 
 const EditMode = ({ table, onUpdate, onDelete }) => {
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [editedName, setEditedName] = useState(table.name);
+  const [editedText, setEditedText] = useState(table.items.join('\n'));
+  const [hasChanges, setHasChanges] = useState(false);
+
+  const handleSave = () => {
+    if (!editedName.trim()) {
+      setError('Table name is required');
+      return;
+    }
+    setError('');
+    const items = editedText.split('\n').filter(item => item.trim());
+    if (items.length === 0) {
+      setError('Table must have at least one item');
+      return;
+    }
+    onUpdate({ ...table, name: editedName.trim(), items });
+    setHasChanges(false);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this table?')) {
+      onDelete(table.id);
+      navigate('/');
+    }
+  };
+
   const handleTextChange = (text) => {
-    const items = text.split('\n').filter(item => item.trim());
-    onUpdate({ ...table, items });
+    setEditedText(text);
+    setHasChanges(true);
   };
 
   const handleNameChange = (name) => {
-    onUpdate({ ...table, name });
+    setEditedName(name);
+    setHasChanges(true);
   };
 
   return (
     <div className="edit-mode">
-      <input
-        value={table.name}
-        onChange={(e) => handleNameChange(e.target.value)}
-      />
-      <TableEditor
-        text={table.items.join('\n')}
-        placeholder="Enter table items, one per line..."
+      <h2>{TEXT.edit.title}</h2>
+
+      <div className="name-input-group">
+        <input
+          type="text"
+          value={editedName}
+          onChange={(e) => handleNameChange(e.target.value)}
+          placeholder="Enter table name..."
+          className="table-name-input"
+        />
+        <button 
+          onClick={handleSave}
+          className="action-button primary-button"
+          disabled={!hasChanges}
+        >
+          {TEXT.edit.saveButton}
+        </button>
+        <button 
+          onClick={handleDelete}
+          className="action-button danger-button"
+        >
+          {TEXT.edit.deleteButton}
+        </button>
+      </div>
+
+      <TableEditorWithPreview
+        text={editedText}
         onTextChange={handleTextChange}
+        tableName={editedName}
+        placeholder={TEXT.edit.contentPlaceholder}
       />
-      <button onClick={() => onDelete(table.id)}>Delete Table</button>
+
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };

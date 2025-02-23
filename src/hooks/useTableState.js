@@ -2,17 +2,12 @@ import { useState, useEffect } from 'react';
 import { loadTables, saveTables } from '../utils/tableUtils';
 
 export const useTableState = () => {
-  const [tables, setTables] = useState([]);
+  // Initialize state with data from localStorage
+  const [tables, setTables] = useState(() => loadTables());
   const [rollStyle, setRollStyle] = useState('normal');
   const [rollHistory, setRollHistory] = useState({});
 
-  useEffect(() => {
-    const savedTables = loadTables();
-    if (savedTables) {
-      setTables(savedTables);
-    }
-  }, []);
-
+  // Save to localStorage whenever tables change
   useEffect(() => {
     saveTables(tables);
   }, [tables]);
