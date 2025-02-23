@@ -38,20 +38,7 @@ const ImportMode = ({ onImport }) => {
 
   return (
     <div className="import-mode">
-      <h2>{TEXT.import.title}</h2>
-      
-      <div className="name-input-group">
-        <input
-          id="tableName"
-          type="text"
-          value={tableName}
-          onChange={(e) => {
-            setTableName(e.target.value);
-            setError('');
-          }}
-          placeholder={TEXT.import.namePlaceholder}
-          className="table-name-input"
-        />
+      <div className="edit-actions">
         <button 
           onClick={handleImport}
           className="action-button primary-button"
@@ -68,6 +55,10 @@ const ImportMode = ({ onImport }) => {
           setError('');
         }}
         tableName={tableName}
+        onTableNameChange={(name) => {
+          setTableName(name);
+          setError('');
+        }}
         placeholder={TEXT.import.contentPlaceholder}
       />
 

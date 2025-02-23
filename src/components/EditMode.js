@@ -46,16 +46,7 @@ const EditMode = ({ table, onUpdate, onDelete }) => {
 
   return (
     <div className="edit-mode">
-      <h2>{TEXT.edit.title}</h2>
-
-      <div className="name-input-group">
-        <input
-          type="text"
-          value={editedName}
-          onChange={(e) => handleNameChange(e.target.value)}
-          placeholder="Enter table name..."
-          className="table-name-input"
-        />
+      <div className="edit-actions">
         <button 
           onClick={handleSave}
           className="action-button primary-button"
@@ -75,6 +66,7 @@ const EditMode = ({ table, onUpdate, onDelete }) => {
         text={editedText}
         onTextChange={handleTextChange}
         tableName={editedName}
+        onTableNameChange={handleNameChange}
         placeholder={TEXT.edit.contentPlaceholder}
       />
 

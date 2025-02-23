@@ -1,9 +1,25 @@
 import React from 'react';
 import './TableEditor.css';
 
-const TableEditor = ({ text, placeholder, onTextChange }) => {
+const TableEditor = ({ text, placeholder, onTextChange, tableName = '', onTableNameChange }) => {
+  const handleNameChange = (e) => {
+    // Prevent newlines in the name
+    const newName = e.target.value.replace(/\n/g, '');
+    onTableNameChange?.(newName);
+  };
+
   return (
     <div className="table-editor">
+      <div className="editor-header">
+        <input
+          type="text"
+          value={tableName}
+          onChange={handleNameChange}
+          placeholder="Enter table name..."
+          className="table-name-input"
+          maxLength={100} // Prevent extremely long names
+        />
+      </div>
       <textarea
         value={text}
         placeholder={placeholder}

@@ -19,6 +19,13 @@
   outline: none;
 }
 
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
 .action-button {
   padding: 10px 20px;
   font-size: 16px;
@@ -66,5 +73,9 @@
 
   .table-name-input, .action-button {
     width: 100%;
+  }
+
+  .edit-actions {
+    flex-direction: column;
   }
 }

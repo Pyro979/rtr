@@ -37,3 +37,66 @@ textarea {
   color: #e74c3c;
   margin: 10px 0;
 }
+
+.table-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.editor-header {
+  padding: 10px 15px;
+  background-color: #f5f2ea;
+  border-bottom: 1px solid #ddd;
+}
+
+.editor-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.editor-header .table-name-input {
+  width: 100%;
+  padding: 4px 0;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  background: none;
+  border: none;
+  border-radius: 0;
+  transition: background-color 0.2s;
+}
+
+.editor-header .table-name-input::placeholder {
+  color: #999;
+  font-style: italic;
+  font-weight: normal;
+}
+
+.editor-header .table-name-input:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.editor-header .table-name-input:focus {
+  outline: none;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.table-editor textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  padding: 15px;
+  border: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
+.table-editor textarea:focus {
+  outline: none;
+}
