@@ -1,5 +1,6 @@
 import React from 'react';
 import { rollOnTable } from '../utils/tableUtils';
+import { TEXT } from '../constants/text';
 import './RollMode.css';
 
 const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => {
@@ -18,7 +19,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
 
   return (
     <div className="roll-mode">
-      <h3>{table.name}</h3>
+      <h2>{TEXT.roll.title}</h2>
       <div className="roll-controls">
         <select 
           value={rollStyle} 
@@ -28,8 +29,8 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
           <option value="weighted">Weighted (Less Common Repeats)</option>
           <option value="noRepeat">No Repeats</option>
         </select>
-        <button onClick={handleRoll}>Roll</button>
-        <button onClick={() => onResetHistory(table.id)}>Reset Memory</button>
+        <button onClick={handleRoll}>{TEXT.roll.rollButton}</button>
+        <button onClick={() => onResetHistory(table.id)}>{TEXT.roll.resetButton}</button>
       </div>
       <div className="roll-result">
         {rollHistory.lastResult && <p>{rollHistory.lastResult}</p>}

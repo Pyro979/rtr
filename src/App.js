@@ -7,6 +7,7 @@ import RollMode from './components/RollMode';
 import Home from './components/Home';
 import IconButton from './components/IconButton';
 import { loadTables, saveTables } from './utils/tableUtils';
+import { TEXT } from './constants/text';
 
 // Wrapper component for table-specific routes
 const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHistory, rollStyle, rollHistory }) => {
@@ -111,22 +112,23 @@ function App() {
       <div className="App">
         <div className="sidebar">
           <Link to="/" className="sidebar-header">
-            <h2>Your Tables</h2>
+            <h2>{TEXT.sidebar.title}</h2>
           </Link>
-          <div className="table-list">
+          <IconButton to="/import" text={TEXT.sidebar.importButton} />
+          <ul className="table-list">
             {tables.map(table => (
-              <Link 
-                key={table.id}
-                to={`/table/${table.id}/roll`}
-                className="table-item"
-              >
-                <div className="table-info">
-                  <span className="table-name">{table.name}</span>
-                </div>
-              </Link>
+              <li key={table.id}>
+                <Link 
+                  to={`/table/${table.id}/roll`}
+                  className="table-item"
+                >
+                  <div className="table-info">
+                    <span className="table-name">{table.name}</span>
+                  </div>
+                </Link>
+              </li>
             ))}
-          </div>
-          <IconButton to="/import" />
+          </ul>
         </div>
 
         <div className="main-content">

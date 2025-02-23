@@ -72,6 +72,9 @@
 }
 
 .table-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   flex: 1;
   overflow-y: auto;
   display: flex;
@@ -87,6 +90,7 @@
   transition: background-color 0.2s;
   text-decoration: none;
   color: white;
+  display: block;
 }
 
 .table-item:hover {
@@ -100,6 +104,9 @@
 
 .table-name {
   font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .button {
