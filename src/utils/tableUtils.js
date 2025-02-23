@@ -1,12 +1,42 @@
 // Clean up text input into table items
-export const parseTableItems = (text) => {
-  console.log('Original text:', text);
-  const items = text
-    .split('\n')
+export const parseTableItems = (text, options = {}) => {
+  const {
+    removeLeadingNumbers = true,
+    removeBulletPoints = true,
+    removeDuplicates = false,
+    removeHeader = false
+  } = options;
+
+  let lines = text.split('\n');
+  
+  // Remove header (first line) if enabled
+  if (removeHeader && lines.length > 0) {
+    lines = lines.slice(1);
+  }
+
+  let items = lines
     .map(line => line.trim())
-    .map(line => line.replace(/^[-*\d.)\s]+/, '')) // Remove bullets, numbers, etc.
     .filter(line => line.length > 0);
-  console.log('Parsed items:', items);
+
+  if (removeLeadingNumbers || removeBulletPoints) {
+    items = items.map(line => {
+      let cleaned = line;
+      if (removeLeadingNumbers) {
+        // Remove leading numbers with dots, parentheses, or just spaces
+        cleaned = cleaned.replace(/^\d+[\s.)]?\s*/, '');
+      }
+      if (removeBulletPoints) {
+        // Remove bullet points, dashes, and asterisks
+        cleaned = cleaned.replace(/^[-*•]\s*/, '');
+      }
+      return cleaned;
+    });
+  }
+
+  if (removeDuplicates) {
+    items = [...new Set(items)];
+  }
+
   return items;
 };
 
@@ -47,4 +77,18 @@ export const loadTables = () => {
 
 export const saveTables = (tables) => {
   localStorage.setItem('randomTables', JSON.stringify(tables));
+};
+
+export const loadImportPreferences = () => {
+  const stored = localStorage.getItem('importPreferences');
+  return stored ? JSON.parse(stored) : {
+    removeLeadingNumbers: true,
+    removeBulletPoints: true,
+    removeDuplicates: false,
+    removeHeader: false
+  };
+};
+
+export const saveImportPreferences = (preferences) => {
+  localStorage.setItem('importPreferences', JSON.stringify(preferences));
 };

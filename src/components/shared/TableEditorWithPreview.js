@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import TableEditor from '../TableEditor';
 import { parseTableItems } from '../../utils/tableUtils';
+import '../../styles/shared.css';
 import './TableEditorWithPreview.css';
 
 const TableEditorWithPreview = ({
@@ -9,11 +10,12 @@ const TableEditorWithPreview = ({
   tableName,
   onTableNameChange,
   placeholder,
-  className = ''
+  className = '',
+  preferences = {}
 }) => {
   const previewItems = useMemo(() => {
-    return text.split('\n').filter(item => item.trim());
-  }, [text]);
+    return parseTableItems(text, preferences);
+  }, [text, preferences]);
 
   return (
     <div className={`editor-preview-container ${className}`}>
@@ -28,7 +30,7 @@ const TableEditorWithPreview = ({
       </div>
       
       <div className="preview-section">
-        <div className="preview-header">
+        <div className="preview-header section-header">
           <h3>
             {tableName || 'Preview'} 
             {previewItems.length > 0 && ` (${previewItems.length} items)`}

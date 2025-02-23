@@ -1,5 +1,6 @@
 import React from 'react';
 import './TableEditor.css';
+import '../styles/shared.css';
 
 const TableEditor = ({ text, placeholder, onTextChange, tableName = '', onTableNameChange }) => {
   const handleNameChange = (e) => {
@@ -10,7 +11,7 @@ const TableEditor = ({ text, placeholder, onTextChange, tableName = '', onTableN
 
   return (
     <div className="table-editor">
-      <div className="editor-header">
+      <div className="editor-header section-header">
         <input
           type="text"
           value={tableName}

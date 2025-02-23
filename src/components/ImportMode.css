@@ -100,6 +100,51 @@
   background-color: #f8d7da;
 }
 
+.import-mode {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.import-preferences {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 15px;
+  background-color: #f5f2ea;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.preferences-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex: 1;
+}
+
+.preference-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  user-select: none;
+}
+
+.preference-item:hover {
+  color: #333;
+}
+
+.preference-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .import-container {
@@ -111,6 +156,25 @@
   }
 
   .table-name-input, .import-button {
+    width: 100%;
+  }
+
+  .import-preferences {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .preferences-options {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .preference-item {
+    width: 100%;
+  }
+
+  .import-preferences .action-button {
     width: 100%;
   }
 }

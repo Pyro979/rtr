@@ -65,6 +65,28 @@
   background-color: #f8d7da;
 }
 
+.section-header {
+  min-height: 30px;
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+textarea {
+  min-height: 300px;
+  font-family: monospace;
+  margin: 0;
+  padding: 15px;
+  width: 100%;
+  border: none;
+  resize: vertical;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+textarea:focus {
+  outline: none;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .name-input-group {
