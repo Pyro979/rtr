@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
-import { useBeforeUnload, unstable_usePrompt as usePrompt } from 'react-router-dom';
+import { useBeforeUnload } from 'react-router-dom';
 import { TEXT } from '../constants/text';
 
 export const useNavigationProtection = (shouldProtect) => {
-  // Handle browser navigation (back/forward/reload)
   useBeforeUnload(
     shouldProtect
       ? (event) => {
@@ -12,10 +10,4 @@ export const useNavigationProtection = (shouldProtect) => {
         }
       : undefined
   );
-
-  // Handle React Router navigation
-  usePrompt({
-    when: shouldProtect,
-    message: TEXT.navigation.unsavedChanges
-  });
 };
