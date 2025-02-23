@@ -58,7 +58,7 @@ const ImportMode = ({ onImport }) => {
               checked={preferences.removeLeadingNumbers}
               onChange={(e) => updatePreference('removeLeadingNumbers', e.target.checked)}
             />
-            Remove leading numbers
+            {TEXT.import.preferences.removeLeadingNumbers}
           </label>
           <label className="preference-item">
             <input
@@ -66,7 +66,7 @@ const ImportMode = ({ onImport }) => {
               checked={preferences.removeBulletPoints}
               onChange={(e) => updatePreference('removeBulletPoints', e.target.checked)}
             />
-            Remove bullet points
+            {TEXT.import.preferences.removeBulletPoints}
           </label>
           <label className="preference-item">
             <input
@@ -74,7 +74,7 @@ const ImportMode = ({ onImport }) => {
               checked={preferences.removeDuplicates}
               onChange={(e) => updatePreference('removeDuplicates', e.target.checked)}
             />
-            Remove duplicates
+            {TEXT.import.preferences.removeDuplicates}
           </label>
           <label className="preference-item">
             <input
@@ -82,7 +82,7 @@ const ImportMode = ({ onImport }) => {
               checked={preferences.removeHeader}
               onChange={(e) => updatePreference('removeHeader', e.target.checked)}
             />
-            Remove header
+            {TEXT.import.preferences.removeHeader}
           </label>
         </div>
         <button 

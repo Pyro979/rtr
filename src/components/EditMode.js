@@ -18,13 +18,13 @@ const EditMode = ({ table, onUpdate, onDelete }) => {
 
   const handleSave = () => {
     if (!editedName.trim()) {
-      setError('Table name is required');
+      setError(TEXT.edit.errors.nameRequired);
       return;
     }
     setError('');
     const items = editedText.split('\n').filter(item => item.trim());
     if (items.length === 0) {
-      setError('Table must have at least one item');
+      setError(TEXT.edit.errors.itemsRequired);
       return;
     }
     onUpdate({ ...table, name: editedName.trim(), items });
@@ -32,7 +32,7 @@ const EditMode = ({ table, onUpdate, onDelete }) => {
   };
 
   const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this table?')) {
+    if (window.confirm(TEXT.edit.confirmDelete)) {
       onDelete(table.id);
       navigate('/');
     }

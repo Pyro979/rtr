@@ -14,6 +14,12 @@ export const TEXT = {
     namePlaceholder: 'Enter table name...',
     contentPlaceholder: 'Enter table items, one per line...',
     submitButton: 'Import',
+    preferences: {
+      removeLeadingNumbers: 'Remove leading numbers',
+      removeBulletPoints: 'Remove bullet points',
+      removeDuplicates: 'Remove duplicates',
+      removeHeader: 'Remove header'
+    },
     errors: {
       nameRequired: 'Table name is required',
       itemsRequired: 'At least one item is required'
@@ -24,9 +30,10 @@ export const TEXT = {
     contentPlaceholder: 'Enter table items, one per line...',
     saveButton: 'Save Changes',
     deleteButton: 'Delete Table',
+    confirmDelete: 'Are you sure you want to delete this table?',
     errors: {
       nameRequired: 'Table name is required',
-      itemsRequired: 'At least one item is required'
+      itemsRequired: 'Table must have at least one item'
     }
   },
   roll: {
