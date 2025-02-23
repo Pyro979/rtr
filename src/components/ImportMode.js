@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import TableEditorWithPreview from './shared/TableEditorWithPreview';
+import { useNavigationProtection } from '../hooks/useNavigationProtection';
 import { parseTableItems, loadImportPreferences, saveImportPreferences } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
 import '../styles/shared.css';
@@ -13,6 +14,10 @@ const ImportMode = ({ onImport }) => {
   const [tableName, setTableName] = useState('');
   const [error, setError] = useState('');
   const [preferences, setPreferences] = useState(() => loadImportPreferences());
+  const [hasChanges, setHasChanges] = useState(false);
+
+  // Add navigation protection when there are unsaved changes
+  useNavigationProtection(hasChanges);
 
   const updatePreference = (key, value) => {
     const newPreferences = { ...preferences, [key]: value };
@@ -94,11 +99,13 @@ const ImportMode = ({ onImport }) => {
         onTextChange={(text) => {
           setImportText(text);
           setError('');
+          setHasChanges(text.trim() !== '' || tableName.trim() !== '');
         }}
         tableName={tableName}
         onTableNameChange={(name) => {
           setTableName(name);
           setError('');
+          setHasChanges(name.trim() !== '' || importText.trim() !== '');
         }}
         placeholder={TEXT.import.contentPlaceholder}
         preferences={preferences}

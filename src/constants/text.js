@@ -42,5 +42,8 @@ export const TEXT = {
   errors: {
     tableNotFound: 'Table not found',
     rollFailed: 'Failed to roll on table'
+  },
+  navigation: {
+    unsavedChanges: 'You have unsaved changes. Are you sure you want to leave?'
   }
 };

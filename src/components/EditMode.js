@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TableEditorWithPreview from './shared/TableEditorWithPreview';
+import { useNavigationProtection } from '../hooks/useNavigationProtection';
 import { TEXT } from '../constants/text';
 import '../styles/shared.css';
 import './EditMode.css';
@@ -11,6 +12,9 @@ const EditMode = ({ table, onUpdate, onDelete }) => {
   const [editedName, setEditedName] = useState(table.name);
   const [editedText, setEditedText] = useState(table.items.join('\n'));
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Add navigation protection when there are unsaved changes
+  useNavigationProtection(hasChanges);
 
   const handleSave = () => {
     if (!editedName.trim()) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
 import Home from './components/Home';
@@ -19,36 +19,43 @@ const App = () => {
     handleResetHistory
   } = useTableState();
 
-  return (
-    <BrowserRouter>
-      <div className="App">
-        <Sidebar tables={tables} />
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route 
-              path="/import" 
-              element={<ImportMode onImport={handleImport} />} 
-            />
-            <Route 
-              path="/table/:tableId/*" 
-              element={
-                <TableRoute 
-                  tables={tables}
-                  onUpdateTable={handleUpdateTable}
-                  onDeleteTable={handleDeleteTable}
-                  onRoll={handleRoll}
-                  onResetHistory={handleResetHistory}
-                  rollStyle={rollStyle}
-                  rollHistory={rollHistory}
-                />
-              } 
-            />
-          </Routes>
-        </div>
+  const Layout = ({ children }) => (
+    <div className="App">
+      <Sidebar tables={tables} />
+      <div className="main-content">
+        {children}
       </div>
-    </BrowserRouter>
+    </div>
   );
+
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <Layout><Home /></Layout>
+    },
+    {
+      path: "/import",
+      element: <Layout><ImportMode onImport={handleImport} /></Layout>
+    },
+    {
+      path: "/table/:tableId/*",
+      element: (
+        <Layout>
+          <TableRoute
+            tables={tables}
+            onUpdateTable={handleUpdateTable}
+            onDeleteTable={handleDeleteTable}
+            onRoll={handleRoll}
+            onResetHistory={handleResetHistory}
+            rollStyle={rollStyle}
+            rollHistory={rollHistory}
+          />
+        </Layout>
+      )
+    }
+  ]);
+
+  return <RouterProvider router={router} />;
 };
 
 export default App;
