@@ -1,10 +1,13 @@
 // Clean up text input into table items
 export const parseTableItems = (text) => {
-  return text
+  console.log('Original text:', text);
+  const items = text
     .split('\n')
     .map(line => line.trim())
     .map(line => line.replace(/^[-*\d.)\s]+/, '')) // Remove bullets, numbers, etc.
     .filter(line => line.length > 0);
+  console.log('Parsed items:', items);
+  return items;
 };
 
 // Roll on a table with different styles

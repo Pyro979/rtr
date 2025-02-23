@@ -1,5 +1,6 @@
 import React from 'react';
 import { rollOnTable } from '../utils/tableUtils';
+import './RollMode.css';
 
 const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => {
   const handleRoll = () => {

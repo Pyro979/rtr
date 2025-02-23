@@ -1,4 +1,5 @@
 import React from 'react';
+import './TableEditor.css';
 
 const TableEditor = ({ text, placeholder, onTextChange, onSubmit, submitLabel }) => {
   return (

@@ -1,0 +1,30 @@
+.home {
+  margin: 40px auto;
+  text-align: center;
+}
+
+.home .icon-button {
+  display: inline-flex;
+}
+
+.home h1 {
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.home h3 {
+  color: #34495e;
+  margin-bottom: 30px;
+}
+
+.home p {
+  color: #666;
+  font-size: 1.2em;
+  line-height: 1.6;
+}
+
+#hero-die {
+  max-width: 900px;
+  width: 100%;
+  margin-bottom: 20px;
+}

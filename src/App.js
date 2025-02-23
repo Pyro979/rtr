@@ -4,6 +4,8 @@ import './App.css';
 import ImportMode from './components/ImportMode';
 import EditMode from './components/EditMode';
 import RollMode from './components/RollMode';
+import Home from './components/Home';
+import IconButton from './components/IconButton';
 import { loadTables, saveTables } from './utils/tableUtils';
 
 // Wrapper component for table-specific routes
@@ -108,7 +110,9 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <div className="sidebar">
-          <h2>Tables</h2>
+          <Link to="/" className="sidebar-header">
+            <h2>Your Tables</h2>
+          </Link>
           <div className="table-list">
             {tables.map(table => (
               <Link 
@@ -122,7 +126,7 @@ function App() {
               </Link>
             ))}
           </div>
-          <Link to="/import" className="button">Import New Table</Link>
+          <IconButton to="/import" />
         </div>
 
         <div className="main-content">
@@ -145,6 +149,7 @@ function App() {
                 />
               }
             />
+            <Route path="/" element={<Home />} />
             <Route path="/" element={<div className="welcome">Select a table or import a new one to begin</div>} />
           </Routes>
         </div>
