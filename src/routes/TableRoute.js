@@ -9,11 +9,8 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll,
   const location = useLocation();
   const isEditMode = location.pathname.endsWith('/edit');
   const table = tables.find(t => t.id === tableId);
-  
-  console.log('TableRoute:', { tableId, isEditMode, table, pathname: location.pathname });
 
   if (!table) {
-    console.log('Table not found, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
@@ -22,8 +19,11 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll,
       <div className="table-header">
         <h2>{table.name}</h2>
         <div className="table-actions">
-          <Link to={`/table/${tableId}/edit`} className="button">Edit</Link>
-          <Link to={`/table/${tableId}/roll`} className="button">Roll</Link>
+          {!isEditMode ? (
+            <Link to={`/table/${tableId}/edit`} className="button">Edit Table</Link>
+          ) : (
+            <Link to={`/table/${tableId}/roll`} className="button">Roll Table</Link>
+          )}
         </div>
       </div>
       {isEditMode ? (
