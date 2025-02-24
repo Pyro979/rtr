@@ -6,7 +6,7 @@ export const TEXT = {
   },
   sidebar: {
     title: 'Random Table Roller',
-    importButton: 'Import Table'
+    importButton: '➕ Import Table'
   },
   import: {
     title: 'Import Table',
