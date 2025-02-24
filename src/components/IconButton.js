@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const IconButton = ({ to, className }) => {
+const IconButton = ({ to, text, className = '', onClick }) => {
   return (
-    <Link to={to} className={`icon-button ${className || ''}`}>
-      <img src="/logo.svg" alt="" className="icon-button-icon" />
-      <span>Import New Table</span>
+    <Link 
+      to={to} 
+      className={`button ${className}`}
+      onClick={onClick}
+    >
+      {text}
     </Link>
   );
 };

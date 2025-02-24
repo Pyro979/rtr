@@ -9,7 +9,7 @@ const Home = () => {
       <img src="./die_white_bg.jpg" id="hero-die" alt="logo" />
       <h1>{TEXT.app.title}</h1>
       <h3>{TEXT.app.subtitle}</h3>
-      <IconButton to="/import" className="large" />
+      <IconButton to="/import" className="large" text={TEXT.sidebar.importButton} />
       <p>{TEXT.app.description}</p>
     </div>
   );
