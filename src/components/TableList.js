@@ -1,21 +1,39 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
 const TableList = ({ tables = [] }) => {
+  const { tableId } = useParams();
+  const activeRef = useRef(null);
+
+  useEffect(() => {
+    if (activeRef.current) {
+      activeRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }, [tableId]);
+
   return (
     <ul className="table-list">
-      {tables.map(table => (
-        <li key={table.id}>
-          <Link 
-            to={`/table/${table.id}/roll`}
-            className="table-item"
+      {tables.map(table => {
+        const isActive = table.id === tableId;
+        return (
+          <li 
+            key={table.id} 
+            ref={isActive ? activeRef : null}
           >
-            <div className="table-info">
-              <span className="table-name">{table.name}</span>
-            </div>
-          </Link>
-        </li>
-      ))}
+            <Link 
+              to={`/table/${table.id}/roll`}
+              className={`table-item ${isActive ? 'active' : ''}`}
+            >
+              <div className="table-info">
+                <span className="table-name">{table.name}</span>
+              </div>
+            </Link>
+          </li>
+        );
+      })}
     </ul>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
 import Home from './components/Home';
@@ -10,13 +10,13 @@ import { useTableState } from './hooks/useTableState';
 const App = () => {
   const {
     tables,
-    rollStyle,
-    rollHistory,
     handleImport,
     handleUpdateTable,
     handleDeleteTable,
     handleRoll,
-    handleResetHistory
+    handleResetHistory,
+    rollStyle,
+    rollHistory
   } = useTableState();
 
   const Layout = ({ children }) => (
@@ -38,20 +38,61 @@ const App = () => {
       element: <Layout><ImportMode onImport={handleImport} /></Layout>
     },
     {
-      path: "/table/:tableId/*",
+      path: "/table/:tableId",
       element: (
         <Layout>
           <TableRoute
             tables={tables}
             onUpdateTable={handleUpdateTable}
             onDeleteTable={handleDeleteTable}
+            onDuplicate={handleImport}
             onRoll={handleRoll}
             onResetHistory={handleResetHistory}
             rollStyle={rollStyle}
             rollHistory={rollHistory}
           />
         </Layout>
-      )
+      ),
+      children: [
+        {
+          path: "edit",
+          element: (
+            <Layout>
+              <TableRoute
+                tables={tables}
+                onUpdateTable={handleUpdateTable}
+                onDeleteTable={handleDeleteTable}
+                onDuplicate={handleImport}
+                onRoll={handleRoll}
+                onResetHistory={handleResetHistory}
+                rollStyle={rollStyle}
+                rollHistory={rollHistory}
+              />
+            </Layout>
+          )
+        },
+        {
+          path: "roll",
+          element: (
+            <Layout>
+              <TableRoute
+                tables={tables}
+                onUpdateTable={handleUpdateTable}
+                onDeleteTable={handleDeleteTable}
+                onDuplicate={handleImport}
+                onRoll={handleRoll}
+                onResetHistory={handleResetHistory}
+                rollStyle={rollStyle}
+                rollHistory={rollHistory}
+              />
+            </Layout>
+          )
+        },
+        {
+          path: "",
+          element: <Navigate to="roll" replace />
+        }
+      ]
     }
   ]);
 

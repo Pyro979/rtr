@@ -1,18 +1,24 @@
 import React from 'react';
-import { Routes, Route, useParams, Navigate, Link } from 'react-router-dom';
+import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
 import EditMode from '../components/EditMode';
 import RollMode from '../components/RollMode';
+import { TEXT } from '../constants/text';
 
-const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHistory, rollStyle, rollHistory }) => {
+const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll, onResetHistory, rollStyle, rollHistory }) => {
   const { tableId } = useParams();
+  const location = useLocation();
+  const isEditMode = location.pathname.endsWith('/edit');
   const table = tables.find(t => t.id === tableId);
   
+  console.log('TableRoute:', { tableId, isEditMode, table, pathname: location.pathname });
+
   if (!table) {
+    console.log('Table not found, redirecting to home');
     return <Navigate to="/" replace />;
   }
 
   return (
-    <>
+    <div className="table-route">
       <div className="table-header">
         <h2>{table.name}</h2>
         <div className="table-actions">
@@ -20,31 +26,23 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onRoll, onResetHisto
           <Link to={`/table/${tableId}/roll`} className="button">Roll</Link>
         </div>
       </div>
-      <Routes>
-        <Route 
-          path="roll" 
-          element={
-            <RollMode 
-              table={table}
-              rollStyle={rollStyle}
-              rollHistory={rollHistory}
-              onRoll={onRoll}
-              onResetHistory={onResetHistory}
-            />
-          } 
+      {isEditMode ? (
+        <EditMode 
+          table={table}
+          onUpdate={onUpdateTable}
+          onDelete={onDeleteTable}
+          onDuplicate={onDuplicate}
         />
-        <Route 
-          path="edit" 
-          element={
-            <EditMode 
-              table={table}
-              onUpdate={onUpdateTable}
-              onDelete={onDeleteTable}
-            />
-          } 
+      ) : (
+        <RollMode 
+          table={table}
+          rollStyle={rollStyle}
+          rollHistory={rollHistory}
+          onRoll={onRoll}
+          onResetHistory={onResetHistory}
         />
-      </Routes>
-    </>
+      )}
+    </div>
   );
 };
 

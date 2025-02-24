@@ -83,18 +83,22 @@
 }
 
 .table-item {
+  display: flex;
+  align-items: center;
   padding: 10px;
-  background-color: #34495e;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
   text-decoration: none;
-  color: white;
-  display: block;
+  color: inherit;
+  border-radius: 4px;
+  margin: 2px 0;
+  transition: background-color 0.5s;
 }
 
 .table-item:hover {
-  background-color: #3498db;
+  background-color: #e0e0e0;
+}
+
+.table-item.active {
+  background-color: #526e81;
 }
 
 .table-info {

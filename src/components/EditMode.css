@@ -1,5 +1,53 @@
 .edit-mode {
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.primary-button:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.danger-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.danger-button:hover:not(:disabled) {
+  background-color: #da190b;
+}
+
+/* Style for duplicate button */
+.duplicate-button {
+  background-color: #2196F3;
+  color: white;
+}
+
+.duplicate-button:hover {
+  background-color: #1976D2;
 }

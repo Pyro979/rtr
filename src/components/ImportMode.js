@@ -8,7 +8,7 @@ import { TEXT } from '../constants/text';
 import '../styles/shared.css';
 import './ImportMode.css';
 
-const ImportMode = ({ onImport }) => {
+const ImportMode = ({ onImport, navigateAfterImport }) => {
   const navigate = useNavigate();
   const [importText, setImportText] = useState('');
   const [tableName, setTableName] = useState('');
@@ -45,7 +45,11 @@ const ImportMode = ({ onImport }) => {
     };
 
     onImport(newTable);
-    navigate(`/table/${tableId}/roll`);
+    if (navigateAfterImport) {
+      navigateAfterImport(tableId);
+    } else {
+      navigate(`/table/${tableId}/roll`);
+    }
   };
 
   return (

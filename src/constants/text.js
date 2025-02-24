@@ -30,6 +30,7 @@ export const TEXT = {
     contentPlaceholder: 'Enter table items, one per line...',
     saveButton: 'Save Changes',
     deleteButton: 'Delete Table',
+    duplicateButton: 'Duplicate',
     confirmDelete: 'Are you sure you want to delete this table?',
     errors: {
       nameRequired: 'Table name is required',
