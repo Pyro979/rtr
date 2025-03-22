@@ -103,7 +103,7 @@
 /* Options button styling */
 .options-button {
   background-color: #757575 !important; /* More muted color */
-  margin-top: 15px !important; /* Add more space above */
+  margin-bottom: 15px !important; /* Add more space above */
 }
 
 .gear-icon {

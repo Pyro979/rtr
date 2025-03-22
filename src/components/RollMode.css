@@ -109,10 +109,10 @@ button.disabled {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #2196f3;
-  color: white;
+  background-color: white;
+  color: #333;
   border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -123,9 +123,9 @@ button.disabled {
 }
 
 .floating-roll-button:hover {
-  background-color: #1976d2;
+  background-color: #f5f5f5;
   transform: scale(1.05);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
 }
 
 .floating-roll-button:active {
@@ -133,16 +133,23 @@ button.disabled {
 }
 
 .floating-roll-button.disabled {
-  background-color: #9e9e9e;
+  background-color: #f5f5f5;
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
-.roll-icon {
-  font-size: 30px;
+.floating-roll-button.disabled .roll-icon-svg {
+  opacity: 0.5;
+}
+
+.roll-icon-svg {
+  width: 40px;
+  height: 40px;
   margin-bottom: 5px;
 }
 
 .roll-text {
   font-size: 14px;
   font-weight: bold;
+  color: #333;
 }
