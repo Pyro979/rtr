@@ -66,6 +66,13 @@ export const rollOnTable = (table, style, history = {}) => {
     });
   }
 
+  console.log('Rolling on table:', { 
+    style, 
+    index, 
+    result: table.items[index],
+    history
+  });
+
   return { index, result: table.items[index] };
 };
 

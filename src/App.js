@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
@@ -19,6 +19,11 @@ const App = () => {
     rollHistory
   } = useTableState();
 
+  // Log state changes for debugging
+  useEffect(() => {
+    console.log('App component rollHistory:', rollHistory);
+  }, [rollHistory]);
+
   const Layout = ({ children }) => (
     <div className="App">
       <Sidebar tables={tables} />
@@ -28,6 +33,7 @@ const App = () => {
     </div>
   );
 
+  // Simplified router configuration
   const router = createBrowserRouter([
     {
       path: "/",
@@ -39,6 +45,10 @@ const App = () => {
     },
     {
       path: "/table/:tableId",
+      element: <Navigate to="roll" replace />
+    },
+    {
+      path: "/table/:tableId/edit",
       element: (
         <Layout>
           <TableRoute
@@ -52,47 +62,24 @@ const App = () => {
             rollHistory={rollHistory}
           />
         </Layout>
-      ),
-      children: [
-        {
-          path: "edit",
-          element: (
-            <Layout>
-              <TableRoute
-                tables={tables}
-                onUpdateTable={handleUpdateTable}
-                onDeleteTable={handleDeleteTable}
-                onDuplicate={handleImport}
-                onRoll={handleRoll}
-                onResetHistory={handleResetHistory}
-                rollStyle={rollStyle}
-                rollHistory={rollHistory}
-              />
-            </Layout>
-          )
-        },
-        {
-          path: "roll",
-          element: (
-            <Layout>
-              <TableRoute
-                tables={tables}
-                onUpdateTable={handleUpdateTable}
-                onDeleteTable={handleDeleteTable}
-                onDuplicate={handleImport}
-                onRoll={handleRoll}
-                onResetHistory={handleResetHistory}
-                rollStyle={rollStyle}
-                rollHistory={rollHistory}
-              />
-            </Layout>
-          )
-        },
-        {
-          path: "",
-          element: <Navigate to="roll" replace />
-        }
-      ]
+      )
+    },
+    {
+      path: "/table/:tableId/roll",
+      element: (
+        <Layout>
+          <TableRoute
+            tables={tables}
+            onUpdateTable={handleUpdateTable}
+            onDeleteTable={handleDeleteTable}
+            onDuplicate={handleImport}
+            onRoll={handleRoll}
+            onResetHistory={handleResetHistory}
+            rollStyle={rollStyle}
+            rollHistory={rollHistory}
+          />
+        </Layout>
+      )
     }
   ]);
 
