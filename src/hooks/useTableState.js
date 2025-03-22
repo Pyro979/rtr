@@ -8,7 +8,11 @@ const ROLL_HISTORY_KEY = 'rollHistory';
 const DEFAULT_TABLE = {
   id: uuidv4(),
   name: 'Random Enemies',
-  items: ['Goblin', 'Zombie', 'Bandit', 'Orc', 'Wolf', 'Nothic']
+  items: [
+    'Goblin', 'Zombie', 'Bandit', 'Orc', 'Wolf', 'Nothic', 'Dragon', 'Troll', 'Giant', 'Gargoyle',
+    'Skeleton', 'Gnoll', 'Kobold', 'Wraith', 'Mimic', 'Hobgoblin', 'Banshee', 'Lich', 'Ogre', 'Bugbear',
+    'Harpy', 'Vampire Spawn', 'Shadow', 'Specter', 'Mind Flayer', 'Beholder', 'Werewolf', 'Medusa', 'Yuan-ti', 'Ghoul'
+]
 };
 
 export const useTableState = () => {
@@ -44,8 +48,8 @@ export const useTableState = () => {
     console.log('Saving tables to localStorage:', tables);
     saveTables(tables);
   }, [tables]);
-
-  // Save roll history to localStorage
+  
+  // Save roll history to localStorage whenever it changes
   useEffect(() => {
     console.log('Saving roll history to localStorage:', rollHistory);
     localStorage.setItem(ROLL_HISTORY_KEY, JSON.stringify(rollHistory));
@@ -130,6 +134,26 @@ export const useTableState = () => {
     console.log('Roll history reset for table:', tableId);
   };
 
+  const handleResetAllHistory = () => {
+    console.log('Resetting all roll history and tables');
+    
+    // Clear all roll history
+    setRollHistory({});
+    
+    // Reset tables to just the default table
+    setTables([{
+      ...DEFAULT_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }]);
+    
+    // Remove from localStorage
+    localStorage.removeItem(ROLL_HISTORY_KEY);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([{
+      ...DEFAULT_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }]));
+  };
+
   // Log rollHistory changes
   useEffect(() => {
     console.log('Roll history updated:', rollHistory);
@@ -144,6 +168,7 @@ export const useTableState = () => {
     handleUpdateTable,
     handleDeleteTable,
     handleRoll,
-    handleResetHistory
+    handleResetHistory,
+    handleResetAllHistory
   };
 };

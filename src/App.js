@@ -15,6 +15,7 @@ const App = () => {
     handleDeleteTable,
     handleRoll,
     handleResetHistory,
+    handleResetAllHistory,
     rollStyle,
     rollHistory
   } = useTableState();
@@ -26,7 +27,7 @@ const App = () => {
 
   const Layout = ({ children }) => (
     <div className="App">
-      <Sidebar tables={tables} />
+      <Sidebar tables={tables} onResetAllHistory={handleResetAllHistory} />
       <div className="main-content">
         {children}
       </div>
