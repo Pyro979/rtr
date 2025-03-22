@@ -57,37 +57,33 @@ const OptionsPage = ({ onResetAllHistory }) => {
       </div>
       
       <div className="options-section">
-        <h2>Credits</h2>
+        <h2>Art Credits</h2>
         <div className="option-item">
           <div className="option-description">
-            <h3>Background Image</h3>
-            <p>
+            Background Image:&nbsp;
               <a href="https://www.freepik.com/free-vector/old-paper-texture_967378.htm" target="_blank" rel="noopener noreferrer">
                 Image by kjpargeter on Freepik
               </a>
-            </p>
           </div>
         </div>
         
         <div className="option-item">
           <div className="option-description">
-            <h3>Logo</h3>
-            <p>
+            Logo:&nbsp;
               <a href="https://commons.wikimedia.org/wiki/File:Twenty_sided_dice.svg" target="_blank" rel="noopener noreferrer">
                 Twenty sided dice by wirelizard on Wikimedia Commons
               </a>
-            </p>
+            
           </div>
         </div>
         
         <div className="option-item">
           <div className="option-description">
-            <h3>Title Image</h3>
-            <p>
+            Title Image:&nbsp;
               <a href="https://commons.wikimedia.org/wiki/File:Dungeons_%26_Dragons_Dice.jpg" target="_blank" rel="noopener noreferrer">
                 Dungeons & Dragons Dice by Turn2538 on Wikimedia Commons
               </a>
-            </p>
+            
           </div>
         </div>
       </div>

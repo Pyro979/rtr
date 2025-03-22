@@ -2,10 +2,10 @@ export const TEXT = {
   app: {
     title: 'RtR: Random Table Roller',
     subtitle: 'for D&D and other TTRPGs',
-    description: 'Create, manage, and roll on custom random tables for your tabletop roleplaying games.'
+    description: 'Create, manage, and roll on custom random tables for your tabletop roleplaying games. <br/> Checkout <a href="https://www.reddit.com/r/d100/">r/d100</a> and <a href="https://www.reddit.com/r/BehindTheTables/">r/BehindTheTables</a> for lots of crowd-sourced tables.'
   },
   sidebar: {
-    title: 'Random Table Roller',
+    title: 'RtR: Random Table Roller',
     importButton: '➕ Import Table'
   },
   import: {

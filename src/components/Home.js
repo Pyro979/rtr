@@ -10,7 +10,7 @@ const Home = () => {
       <h1>{TEXT.app.title}</h1>
       <h3>{TEXT.app.subtitle}</h3>
       <IconButton to="/import" className="large" text={TEXT.sidebar.importButton} />
-      <p>{TEXT.app.description}</p>
+      <p dangerouslySetInnerHTML={{ __html: TEXT.app.description }}></p>
     </div>
   );
 };
