@@ -110,10 +110,10 @@ export const parseDiceNotation = (text) => {
       total = Math.max(1, total);
     }
     
-    // Replace the dice notation with the result in parentheses
+    // Replace the dice notation with the result using = and a span for styling
     modifiedText = modifiedText.replace(
       fullMatch, 
-      `${fullMatch} (${total})`
+      `${fullMatch} = <span class="dice-result">${total}</span>`
     );
   }
   

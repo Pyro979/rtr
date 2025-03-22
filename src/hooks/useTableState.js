@@ -5,14 +5,88 @@ import { loadTables, saveTables } from '../utils/tableUtils';
 const STORAGE_KEY = 'randomTables';
 const ROLL_HISTORY_KEY = 'rollHistory';
 
-const DEFAULT_TABLE = {
+const DEFAULT_ENEMIES_TABLE = {
   id: uuidv4(),
   name: 'Random Enemies',
   items: [
     'Goblin', '1d4 Zombies', 'Bandit', '1d6+1 Orcs', '1d4+1 Wolf', '1d3 Nothic', 'Dragon', 'Troll', 'Giant', 'Gargoyle',
     'Skeleton', '1d3 Gnolls', 'Kobold', 'Wraith', 'Mimic', 'Hobgoblin', '1d2 Banshees', 'Lich', '1d3+2 Ogres', 'Bugbear',
     'Harpy', 'Vampire Spawn', '2d6 Shadow (RIP 💀)', 'Specter', 'Mind Flayer', 'Beholder', '1d4-1 Werewolves', 'Medusa', 'Yuan-ti', 'Ghoul'
-]
+  ]
+};
+
+const DEFAULT_TREASURE_TABLE = {
+  id: uuidv4(),
+  name: 'Random Treasure',
+  items: [
+    '1d100+50 Gold coins', 
+    '1d20 Silver coins', 
+    '1d6 Gemstones worth 50gp each', 
+    'Small jade figurine (75gp)', 
+    'Potion of Healing', 
+    '1d4 Potions of Minor Healing', 
+    'Scroll of Identify', 
+    'Masterwork dagger', 
+    '1d3 Pieces of fine jewelry', 
+    'Ancient coin collection',
+    'Ornate silver mirror (120gp)', 
+    'Bag of 1d10 semi-precious gems', 
+    '+1 Longsword', 
+    'Wand of Magic Missiles (1d6+1 charges)', 
+    'Ring of Protection', 
+    'Boots of Elvenkind', 
+    'Cloak of Resistance', 
+    '2d6×10 Platinum coins', 
+    'Cursed scroll (save or 1d4 damage)', 
+    'Golden chalice with ruby inlays',
+    'Spell component pouch', 
+    'Treasure map to hidden cache', 
+    'Enchanted quill that never runs out of ink', 
+    'Ivory dice set with gold inlay', 
+    'Bag of holding (small)', 
+    'Bracers of Archery', 
+    'Elemental gem', 
+    'Philter of Love', 
+    'Dust of Dryness (1d4 pellets)', 
+    'Immovable Rod'
+  ]
+};
+
+const DEFAULT_WEATHER_TABLE = {
+  id: uuidv4(),
+  name: 'Random Weather',
+  items: [
+    'Clear skies and mild temperature', 
+    'Overcast with light breeze', 
+    'Heavy rain for 1d4 hours', 
+    'Dense fog until midday', 
+    'Scorching heat (disadvantage on Constitution saves)', 
+    'Light drizzle throughout the day', 
+    'Thunderstorm with lightning strikes', 
+    'Strong winds (difficult terrain for small creatures)', 
+    'Bitter cold (Constitution save or 1d4 cold damage)', 
+    'Hailstorm for 1d2 hours',
+    'Unusually humid and muggy', 
+    'Perfect weather, not a cloud in sight', 
+    'Torrential downpour with flooding', 
+    'Dust storm reducing visibility', 
+    'Unnaturally still air, complete silence', 
+    'Gentle snowfall (1d3 inches)', 
+    'Blizzard conditions (heavily obscured)', 
+    'Ash falling from distant wildfire', 
+    'Thick mist with strange echoes', 
+    'Double rainbow after brief shower',
+    'Sweltering heat with no breeze', 
+    'Sudden temperature drop as night approaches', 
+    'Intermittent rain showers', 
+    'Howling winds from the north', 
+    'Morning frost covering everything', 
+    'Oppressive heat with distant thunder', 
+    'Gentle rain with occasional sunbreaks', 
+    'Ominous dark clouds but no precipitation', 
+    'Unseasonably warm and pleasant', 
+    'Eerie calm before a storm'
+  ]
 };
 
 export const useTableState = () => {
@@ -20,10 +94,10 @@ export const useTableState = () => {
   const [tables, setTables] = useState(() => {
     const storedTables = localStorage.getItem(STORAGE_KEY);
     if (!storedTables) {
-      // First time loading the app, create default table
-      const initialTables = [DEFAULT_TABLE];
+      // First time loading the app, create default tables
+      const initialTables = [DEFAULT_ENEMIES_TABLE, DEFAULT_TREASURE_TABLE, DEFAULT_WEATHER_TABLE];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTables));
-      console.log('Initializing tables state with default table:', initialTables);
+      console.log('Initializing tables state with default tables:', initialTables);
       return initialTables;
     }
     console.log('Initializing tables state from localStorage:', storedTables);
@@ -140,16 +214,28 @@ export const useTableState = () => {
     // Clear all roll history
     setRollHistory({});
     
-    // Reset tables to just the default table
+    // Reset tables to just the default tables
     setTables([{
-      ...DEFAULT_TABLE,
+      ...DEFAULT_ENEMIES_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }, {
+      ...DEFAULT_TREASURE_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }, {
+      ...DEFAULT_WEATHER_TABLE,
       id: uuidv4() // Generate a new ID for the default table
     }]);
     
     // Remove from localStorage
     localStorage.removeItem(ROLL_HISTORY_KEY);
     localStorage.setItem(STORAGE_KEY, JSON.stringify([{
-      ...DEFAULT_TABLE,
+      ...DEFAULT_ENEMIES_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }, {
+      ...DEFAULT_TREASURE_TABLE,
+      id: uuidv4() // Generate a new ID for the default table
+    }, {
+      ...DEFAULT_WEATHER_TABLE,
       id: uuidv4() // Generate a new ID for the default table
     }]));
   };

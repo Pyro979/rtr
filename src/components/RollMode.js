@@ -142,7 +142,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       
       {currentRoll && (
         <div className="roll-result">
-          <p>Rolled: {currentRoll}</p>
+          <p>Rolled: <span dangerouslySetInnerHTML={{ __html: currentRoll }}></span></p>
         </div>
       )}
       
