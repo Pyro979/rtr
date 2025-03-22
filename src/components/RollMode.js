@@ -120,13 +120,6 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
           <option value="weighted">Weighted (Less Common Repeats)</option>
           <option value="noRepeat">No Repeats</option>
         </select>
-        <button 
-          onClick={handleRoll} 
-          disabled={isRolling || allItemsRolled}
-          className={allItemsRolled ? 'disabled' : ''}
-        >
-          {allItemsRolled ? 'All Items Rolled' : TEXT.roll.rollButton}
-        </button>
         <button onClick={handleResetHistory}>
           {TEXT.roll.resetButton}
         </button>
@@ -171,6 +164,17 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
           </tbody>
         </table>
       </div>
+      
+      {/* Floating action button for rolling */}
+      <button 
+        className={`floating-roll-button ${allItemsRolled ? 'disabled' : ''}`}
+        onClick={handleRoll}
+        disabled={isRolling || allItemsRolled}
+        aria-label="Roll on table"
+      >
+        <span className="roll-icon">🎲</span>
+        <span className="roll-text">{allItemsRolled ? 'All Rolled' : 'Roll'}</span>
+      </button>
     </div>
   );
 };

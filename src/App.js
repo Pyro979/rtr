@@ -5,6 +5,7 @@ import ImportMode from './components/ImportMode';
 import Home from './components/Home';
 import Sidebar from './components/Sidebar';
 import TableRoute from './routes/TableRoute';
+import OptionsPage from './components/OptionsPage';
 import { useTableState } from './hooks/useTableState';
 
 const App = () => {
@@ -81,6 +82,10 @@ const App = () => {
           />
         </Layout>
       )
+    },
+    {
+      path: "/options",
+      element: <Layout><OptionsPage onResetAllHistory={handleResetAllHistory} /></Layout>
     }
   ]);
 

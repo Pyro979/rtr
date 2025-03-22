@@ -2,6 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  position: relative; /* For floating button positioning */
 }
 
 .roll-controls {
@@ -32,6 +33,7 @@
   overflow-y: auto;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
+  padding-bottom: 70px; /* Make room for the floating button */
 }
 
 .roll-table table {
@@ -97,4 +99,50 @@
 button.disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+/* Floating action button styles */
+.floating-roll-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.floating-roll-button:hover {
+  background-color: #1976d2;
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
+}
+
+.floating-roll-button:active {
+  transform: scale(0.95);
+}
+
+.floating-roll-button.disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.roll-icon {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.roll-text {
+  font-size: 14px;
+  font-weight: bold;
 }

@@ -61,16 +61,15 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
           <h2>{TEXT.sidebar.title}</h2>
         </Link>
         <IconButton to="/import" text={TEXT.sidebar.importButton} onClick={handleClose} />
-        <TableList tables={tables} onLinkClick={handleClose} />
+        <div className="sidebar-spacer"></div>
+        <IconButton 
+          to="/options" 
+          text={<><span className="gear-icon">⚙️</span> Options</>} 
+          onClick={handleClose}
+          className="options-button"
+        />
         
-        <div className="sidebar-footer">
-          <button 
-            className="reset-history-button"
-            onClick={handleResetClick}
-          >
-            Reset All Data
-          </button>
-        </div>
+        <TableList tables={tables} onLinkClick={handleClose} />
         
         {showResetPrompt && (
           <div className="reset-prompt-overlay">
