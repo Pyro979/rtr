@@ -76,6 +76,53 @@ export const rollOnTable = (table, style, history = {}) => {
   return { index, result: table.items[index] };
 };
 
+// Parse and roll dice notation in text (e.g., "1d6", "2d8+3")
+export const parseDiceNotation = (text) => {
+  // Regular expression to match dice notation patterns
+  // Matches patterns like 1d6, 2d8+3, 1d20-2, etc.
+  const diceRegex = /(\d+)d(\d+)(?:([-+])(\d+))?/g;
+  
+  let result = text;
+  let match;
+  let hasMatches = false;
+  
+  // Create a copy of the text to modify
+  let modifiedText = text;
+  
+  // Find all dice notations in the text
+  while ((match = diceRegex.exec(text)) !== null) {
+    hasMatches = true;
+    
+    // Extract dice components
+    const [fullMatch, numDice, diceSize, operator, modifier] = match;
+    
+    // Roll the dice
+    let total = 0;
+    for (let i = 0; i < parseInt(numDice, 10); i++) {
+      total += Math.floor(Math.random() * parseInt(diceSize, 10)) + 1;
+    }
+    
+    // Apply modifier if present
+    if (operator && modifier) {
+      const modValue = parseInt(modifier, 10);
+      total = operator === '+' ? total + modValue : total - modValue;
+      // Ensure the result is at least 1
+      total = Math.max(1, total);
+    }
+    
+    // Replace the dice notation with the result in parentheses
+    modifiedText = modifiedText.replace(
+      fullMatch, 
+      `${fullMatch} (${total})`
+    );
+  }
+  
+  return {
+    text: modifiedText,
+    hasMatches
+  };
+};
+
 // Local storage functions
 export const loadTables = () => {
   const stored = localStorage.getItem('randomTables');

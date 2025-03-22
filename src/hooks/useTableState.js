@@ -9,9 +9,9 @@ const DEFAULT_TABLE = {
   id: uuidv4(),
   name: 'Random Enemies',
   items: [
-    'Goblin', 'Zombie', 'Bandit', 'Orc', 'Wolf', 'Nothic', 'Dragon', 'Troll', 'Giant', 'Gargoyle',
-    'Skeleton', 'Gnoll', 'Kobold', 'Wraith', 'Mimic', 'Hobgoblin', 'Banshee', 'Lich', 'Ogre', 'Bugbear',
-    'Harpy', 'Vampire Spawn', 'Shadow', 'Specter', 'Mind Flayer', 'Beholder', 'Werewolf', 'Medusa', 'Yuan-ti', 'Ghoul'
+    'Goblin', '1d4 Zombies', 'Bandit', '1d6+1 Orcs', '1d4+1 Wolf', '1d3 Nothic', 'Dragon', 'Troll', 'Giant', 'Gargoyle',
+    'Skeleton', '1d3 Gnolls', 'Kobold', 'Wraith', 'Mimic', 'Hobgoblin', '1d2 Banshees', 'Lich', '1d3+2 Ogres', 'Bugbear',
+    'Harpy', 'Vampire Spawn', '2d6 Shadow (RIP 💀)', 'Specter', 'Mind Flayer', 'Beholder', '1d4-1 Werewolves', 'Medusa', 'Yuan-ti', 'Ghoul'
 ]
 };
 

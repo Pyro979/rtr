@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { rollOnTable } from '../utils/tableUtils';
+import { rollOnTable, parseDiceNotation } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
 import './RollMode.css';
 
@@ -84,8 +84,11 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     newCounts[rollResult.index] = (newCounts[rollResult.index] || 0) + 1;
     setRollCounts(newCounts);
     
+    // Process any dice notation in the rolled result
+    const processedResult = parseDiceNotation(rollResult.result);
+    
     // Set the current roll text and index
-    setCurrentRoll(rollResult.result);
+    setCurrentRoll(processedResult.text);
     setRolledIndex(rollResult.index);
     
     // Call the parent's onRoll handler
