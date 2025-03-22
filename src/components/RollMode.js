@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { rollOnTable, parseDiceNotation } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
 import './RollMode.css';
@@ -34,16 +34,29 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       if (tableHistory.counts) {
         setRollCounts(tableHistory.counts);
       }
-      if (tableHistory.style) {
-        setCurrentRollStyle(tableHistory.style);
-      }
-      if (tableHistory.rolledIndex) {
+      if (tableHistory.rolledIndex !== undefined) {
         setRolledIndex(tableHistory.rolledIndex);
       }
     }
   }, [table, rollHistory]);
 
-  // Scroll highlighted item into view when it changes
+  // Add keyboard shortcut for rolling
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Only trigger if 'r' is pressed and we're not in an input field
+      if (e.key === 'r' && 
+          !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        handleRoll();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [table, isRolling, rollHistory, currentRollStyle]);
+
+  // Scroll to highlighted row when it changes
   useEffect(() => {
     if (highlightedRowRef.current && tableContainerRef.current) {
       // Use a small timeout to ensure the DOM has updated
@@ -123,13 +136,33 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     onResetHistory(table.id);
   };
 
+  // Function to copy the roll result to clipboard
+  const handleCopyResult = useCallback(() => {
+    if (!currentRoll) return;
+    
+    navigator.clipboard.writeText(currentRoll)
+      .then(() => {
+        // Show a check icon for 3 seconds
+        const copyButton = document.querySelector('.copy-button i');
+        if (copyButton) {
+          copyButton.className = 'fas fa-check';
+          setTimeout(() => {
+            copyButton.className = 'fas fa-copy';
+          }, 3000);
+        }
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+      });
+  }, [currentRoll]);
+
   return (
     <div className="roll-mode">
       <h2>{TEXT.roll.title}</h2>
       <div className="roll-controls">
         <select 
           value={currentRollStyle} 
-          onChange={(e) => handleStyleChange(e.target.value)}
+          onChange={(e) => setCurrentRollStyle(e.target.value)}
         >
           <option value="normal">Normal Roll</option>
           <option value="weighted">Weighted (Less Common Repeats)</option>
@@ -142,7 +175,16 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       
       {currentRoll && (
         <div className="roll-result">
-          <p>Rolled: <span dangerouslySetInnerHTML={{ __html: currentRoll }}></span></p>
+          <div className="result-container">
+            <p>Rolled: {currentRoll}</p>
+            <button 
+              className="copy-button" 
+              onClick={handleCopyResult} 
+              title="Copy result to clipboard"
+            >
+              <i className="fas fa-copy"></i>
+            </button>
+          </div>
         </div>
       )}
       

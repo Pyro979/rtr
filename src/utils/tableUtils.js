@@ -82,7 +82,6 @@ export const parseDiceNotation = (text) => {
   // Matches patterns like 1d6, 2d8+3, 1d20-2, etc.
   const diceRegex = /(\d+)d(\d+)(?:([-+])(\d+))?/g;
   
-  let result = text;
   let match;
   let hasMatches = false;
   
@@ -110,10 +109,10 @@ export const parseDiceNotation = (text) => {
       total = Math.max(1, total);
     }
     
-    // Replace the dice notation with the result using = and a span for styling
+    // Replace the dice notation with the result using plain text
     modifiedText = modifiedText.replace(
       fullMatch, 
-      `${fullMatch} = <span class="dice-result">${total}</span>`
+      `${fullMatch} = ${total}`
     );
   }
   
