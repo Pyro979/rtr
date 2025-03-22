@@ -145,6 +145,33 @@
   cursor: pointer;
 }
 
+/* Requirements checklist */
+.import-requirements {
+  margin-top: 15px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}
+
+.requirement-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.requirement-item span {
+  margin-right: 8px;
+}
+
+.requirement-met {
+  color: #4caf50;
+}
+
+.requirement-missing {
+  color: #9e9e9e;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .import-container {

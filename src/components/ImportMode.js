@@ -19,6 +19,15 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
   // Add navigation protection when there are unsaved changes
   useNavigationProtection(hasChanges);
 
+  // Debug state values
+  useEffect(() => {
+    console.log('Import state:', { 
+      tableName: tableName, 
+      importTextLength: importText.length,
+      buttonDisabled: !tableName.trim() || importText.trim() === ''
+    });
+  }, [tableName, importText]);
+
   const updatePreference = (key, value) => {
     const newPreferences = { ...preferences, [key]: value };
     setPreferences(newPreferences);
@@ -96,6 +105,22 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
         >
           {TEXT.import.submitButton}
         </button>
+        
+        {/* Requirements checklist */}
+        <div className="import-requirements">
+          <div className="requirement-item">
+            <span className={tableName.trim() ? "requirement-met" : "requirement-missing"}>
+              {tableName.trim() ? "✅" : "⬜"}
+            </span>
+            <span>Table name</span>
+          </div>
+          <div className="requirement-item">
+            <span className={importText.trim() ? "requirement-met" : "requirement-missing"}>
+              {importText.trim() ? "✅" : "⬜"}
+            </span>
+            <span>Table data</span>
+          </div>
+        </div>
       </div>
 
       <TableEditorWithPreview
