@@ -10,6 +10,8 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   const [rollCounts, setRollCounts] = useState({});
   // Internal state for tracking roll style
   const [currentRollStyle, setCurrentRollStyle] = useState(rollStyle);
+  // Internal state for tracking rolled index
+  const [rolledIndex, setRolledIndex] = useState(null);
   // Track if we're currently processing a roll to prevent infinite recursion
   const [isRolling, setIsRolling] = useState(false);
   // Ref for the highlighted row
@@ -35,6 +37,9 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       if (tableHistory.style) {
         setCurrentRollStyle(tableHistory.style);
       }
+      if (tableHistory.rolledIndex) {
+        setRolledIndex(tableHistory.rolledIndex);
+      }
     }
   }, [table, rollHistory]);
 
@@ -49,7 +54,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         });
       }, 100);
     }
-  }, [currentRoll]);
+  }, [rolledIndex]);
 
   // Check if all items have been rolled in noRepeat mode
   const allItemsRolled = currentRollStyle === 'noRepeat' && 
@@ -59,31 +64,37 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   const handleRoll = () => {
     if (!table || !table.id || isRolling || allItemsRolled) return;
     
-    // Prevent recursive calls
     setIsRolling(true);
     
-    try {
-      const result = rollOnTable(table, currentRollStyle, rollCounts);
-      
-      // If no result, just return
-      if (!result) {
-        setIsRolling(false);
-        return;
-      }
-      
-      // Update local state immediately
-      setCurrentRoll(result.result);
-      setRollCounts(prev => ({
-        ...prev,
-        [result.index]: (prev[result.index] || 0) + 1
-      }));
-      
-      // Also update parent state
-      onRoll(table.id, result.index, result.result, currentRollStyle);
-    } finally {
-      // Always reset the rolling flag
+    // Get the current history for this table
+    const tableHistory = rollHistory[table.id] || {};
+    
+    // Roll on the table
+    const rollResult = rollOnTable(table, currentRollStyle, tableHistory);
+    
+    if (!rollResult) {
+      // All items have been rolled, need to reset
+      handleResetHistory();
       setIsRolling(false);
+      return;
     }
+    
+    // Update the roll counts for display
+    const newCounts = { ...rollCounts };
+    newCounts[rollResult.index] = (newCounts[rollResult.index] || 0) + 1;
+    setRollCounts(newCounts);
+    
+    // Set the current roll text and index
+    setCurrentRoll(rollResult.result);
+    setRolledIndex(rollResult.index);
+    
+    // Call the parent's onRoll handler
+    onRoll(table.id, rollResult.index);
+    
+    // Reset the rolling state after a short delay
+    setTimeout(() => {
+      setIsRolling(false);
+    }, 500);
   };
   
   const handleStyleChange = (newStyle) => {
@@ -103,6 +114,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     // Reset local state
     setCurrentRoll(null);
     setRollCounts({});
+    setRolledIndex(null);
     
     // Also reset parent state
     onResetHistory(table.id);
@@ -136,7 +148,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
           <tbody>
             {table.items.map((item, index) => {
               const count = rollCounts[index] || 0;
-              const isHighlighted = item === currentRoll;
+              const isHighlighted = index === rolledIndex;
               const isRolled = currentRollStyle === 'noRepeat' && count > 0;
               
               return (
