@@ -5,6 +5,7 @@ import TableEditorWithPreview from './shared/TableEditorWithPreview';
 import { useNavigationProtection } from '../hooks/useNavigationProtection';
 import { parseTableItems, loadImportPreferences, saveImportPreferences } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
+import { Link } from 'react-router-dom';
 import '../styles/shared.css';
 import './ImportMode.css';
 
@@ -15,6 +16,7 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
   const [error, setError] = useState('');
   const [preferences, setPreferences] = useState(() => loadImportPreferences());
   const [hasChanges, setHasChanges] = useState(false);
+  const [importSuccess, setImportSuccess] = useState(null);
 
   // Add navigation protection when there are unsaved changes
   useNavigationProtection(hasChanges);
@@ -54,15 +56,46 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
     };
 
     onImport(newTable);
-    if (navigateAfterImport) {
-      navigateAfterImport(tableId);
-    } else {
-      navigate(`/table/${tableId}/roll`);
-    }
+    
+    // Set success state instead of navigating away
+    setImportSuccess({
+      id: tableId,
+      name: tableName.trim(),
+      itemCount: items.length
+    });
+    
+    // Clear the form for a new import
+    setImportText('');
+    setTableName('');
+    setHasChanges(false);
+    
+    // Don't navigate away automatically
+    // if (navigateAfterImport) {
+    //   navigateAfterImport(tableId);
+    // } else {
+    //   navigate(`/table/${tableId}/roll`);
+    // }
   };
 
   return (
     <div className="import-mode">
+      {importSuccess && (
+        <div className="import-success">
+          <div className="success-message">
+            Created a new table with {importSuccess.itemCount} items: 
+            <Link to={`/table/${importSuccess.id}/roll`} className="table-link">
+              {importSuccess.name}
+            </Link>
+          </div>
+          <button 
+            className="action-button secondary-button clear-button"
+            onClick={() => setImportSuccess(null)}
+          >
+            Clear
+          </button>
+        </div>
+      )}
+      
       <div className="import-preferences">
         <div className="preferences-options">
           <label className="preference-item">

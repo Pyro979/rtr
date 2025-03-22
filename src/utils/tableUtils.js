@@ -91,7 +91,7 @@ export const loadImportPreferences = () => {
   return stored ? JSON.parse(stored) : {
     removeLeadingNumbers: true,
     removeBulletPoints: true,
-    removeDuplicates: false,
+    removeDuplicates: true,
     removeHeader: false
   };
 };
