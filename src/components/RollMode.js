@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { rollOnTable } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
 import './RollMode.css';
@@ -12,6 +12,10 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   const [currentRollStyle, setCurrentRollStyle] = useState(rollStyle);
   // Track if we're currently processing a roll to prevent infinite recursion
   const [isRolling, setIsRolling] = useState(false);
+  // Ref for the highlighted row
+  const highlightedRowRef = useRef(null);
+  // Ref for the table container
+  const tableContainerRef = useRef(null);
   
   // Update internal roll style when prop changes
   useEffect(() => {
@@ -33,6 +37,19 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       }
     }
   }, [table, rollHistory]);
+
+  // Scroll highlighted item into view when it changes
+  useEffect(() => {
+    if (highlightedRowRef.current && tableContainerRef.current) {
+      // Use a small timeout to ensure the DOM has updated
+      setTimeout(() => {
+        highlightedRowRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100);
+    }
+  }, [currentRoll]);
 
   // Check if all items have been rolled in noRepeat mode
   const allItemsRolled = currentRollStyle === 'noRepeat' && 
@@ -121,7 +138,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         </div>
       )}
       
-      <div className="roll-table">
+      <div className="roll-table" ref={tableContainerRef}>
         <table>
           <tbody>
             {table.items.map((item, index) => {
@@ -136,6 +153,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
                     ${isHighlighted ? 'highlighted' : ''}
                     ${isRolled ? 'rolled' : ''}
                   `}
+                  ref={isHighlighted ? highlightedRowRef : null}
                 >
                   <td>{index + 1}</td>
                   <td>
