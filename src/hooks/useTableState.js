@@ -52,9 +52,16 @@ export const useTableState = () => {
     setTables(prev => prev.filter(t => t.id !== tableId));
   };
 
-  const handleRoll = (result) => {
-    console.log('Roll result:', result);
-    setRollHistory(result);
+  const handleRoll = (tableId, index, result) => {
+    console.log('Roll result:', { tableId, index, result });
+    setRollHistory(prev => ({
+      ...prev,
+      [tableId]: {
+        ...prev[tableId],
+        [index]: ((prev[tableId] || {})[index] || 0) + 1,
+        lastResult: result
+      }
+    }));
   };
 
   const handleResetHistory = () => {
