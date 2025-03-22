@@ -230,7 +230,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         aria-label="Roll on table"
       >
         <img src="/logo.svg" alt="d20 dice" className="roll-icon-svg" />
-        <span className="roll-text">{allItemsRolled ? 'Done' : 'Roll'}</span>
+        <span className="roll-text">{allItemsRolled ? 'Done' : 'Roll (r)'}</span>
       </button>
     </div>
   );

@@ -39,7 +39,7 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout><Home /></Layout>
+      element: <Layout isHomePage={true}><Home /></Layout>
     },
     {
       path: "/import",

@@ -100,7 +100,7 @@
 .roll-table table {
   width: 100%;
   border-collapse: collapse;
-  background: #fff;
+  background: #f3edc8;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
@@ -111,10 +111,10 @@
 
 .roll-table td:first-child {
   width: 50px;
-  color: #666;
+  color: #333;
   text-align: right;
   border-right: 1px solid #eee;
-  background: #fafafa;
+  background: #d2dfaa;
 }
 
 /* Enhanced highlighting styles */
