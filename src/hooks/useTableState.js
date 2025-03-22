@@ -8,7 +8,7 @@ const ROLL_HISTORY_KEY = 'rollHistory';
 const DEFAULT_TABLE = {
   id: uuidv4(),
   name: 'Random Enemies',
-  items: ['Goblin', 'Zombie', 'Bandit', 'Orc', 'Wolf']
+  items: ['Goblin', 'Zombie', 'Bandit', 'Orc', 'Wolf', 'Nothic']
 };
 
 export const useTableState = () => {
