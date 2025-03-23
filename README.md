@@ -1,10 +1,8 @@
-This project can be found at https://pyro979.itch.io/rtr-random-table-roller
-
 # RtR: Random Table Roller
 
 A web application for creating, managing, and rolling on custom random tables for tabletop roleplaying games.
 
-## Live Demo
+## Hosted on
 
 - [itch.io](https://pyro979.itch.io/rtr-random-table-roller)
 - [GitHub Pages](https://pyro979.github.io/rtr/)
