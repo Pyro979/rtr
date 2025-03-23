@@ -18,10 +18,14 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:itch": "cross-env REACT_APP_DEPLOY_TARGET=itch npm run build",
+    "build:github": "cross-env REACT_APP_DEPLOY_TARGET=github npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "package": "npm run build && node scripts/package.js",
-    "publish": "npm run build && node scripts/publish.js"
+    "package": "npm run build:itch && node scripts/package.js",
+    "publish": "npm run build:itch && node scripts/publish.js",
+    "deploy:github": "npm run build:github && gh-pages -d build",
+    "deploy:all": "node scripts/publish-all.js"
   },
   "eslintConfig": {
     "extends": [
@@ -42,6 +46,8 @@
     ]
   },
   "devDependencies": {
-    "archiver": "^7.0.1"
+    "archiver": "^7.0.1",
+    "cross-env": "^7.0.3",
+    "gh-pages": "^4.0.0"
   }
 }
