@@ -1,0 +1,44 @@
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-page h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #e74c3c;
+}
+
+.error-message {
+  font-family: monospace;
+  background-color: #f8f8f8;
+  padding: 1rem;
+  border-radius: 4px;
+  margin: 1rem 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.error-actions {
+  margin-top: 2rem;
+}
+
+.home-button {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.home-button:hover {
+  background-color: #2980b9;
+}

@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createHashRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
 import Home from './components/Home';
 import Sidebar from './components/Sidebar';
 import TableRoute from './routes/TableRoute';
 import OptionsPage from './components/OptionsPage';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useTableState } from './hooks/useTableState';
 
 const App = () => {
@@ -36,18 +37,21 @@ const App = () => {
   );
 
   // Simplified router configuration
-  const router = createBrowserRouter([
+  const router = createHashRouter([
     {
       path: "/",
-      element: <Layout isHomePage={true}><Home /></Layout>
+      element: <Layout isHomePage={true}><Home /></Layout>,
+      errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
       path: "/import",
-      element: <Layout><ImportMode onImport={handleImport} /></Layout>
+      element: <Layout><ImportMode onImport={handleImport} /></Layout>,
+      errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
       path: "/table/:tableId",
-      element: <Navigate to="roll" replace />
+      element: <Navigate to="roll" replace />,
+      errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
       path: "/table/:tableId/edit",
@@ -64,7 +68,8 @@ const App = () => {
             rollHistory={rollHistory}
           />
         </Layout>
-      )
+      ),
+      errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
       path: "/table/:tableId/roll",
@@ -81,11 +86,13 @@ const App = () => {
             rollHistory={rollHistory}
           />
         </Layout>
-      )
+      ),
+      errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
       path: "/options",
-      element: <Layout><OptionsPage onResetAllHistory={handleResetAllHistory} /></Layout>
+      element: <Layout><OptionsPage onResetAllHistory={handleResetAllHistory} /></Layout>,
+      errorElement: <Layout><ErrorBoundary /></Layout>
     }
   ]);
 
