@@ -2,7 +2,7 @@ export const TEXT = {
   app: {
     title: 'RtR: Random Table Roller',
     subtitle: 'for D&D and other TTRPGs',
-    description: 'Create, manage, and roll on custom random tables for your tabletop roleplaying games. <br/> Checkout <a href="https://www.reddit.com/r/d100/">r/d100</a> and <a href="https://www.reddit.com/r/BehindTheTables/">r/BehindTheTables</a> for lots of crowd-sourced tables.'
+    description: 'Create, manage, and roll on custom random tables for your tabletop roleplaying games. <br/> Checkout <a href="https://www.reddit.com/r/d100/">r/d100</a> and <a href="https://www.reddit.com/r/BehindTheTables/">r/BehindTheTables</a> for lots of crowd-sourced tables. <br/> See DMs Guild for my <a href="https://www.dmsguild.com/browse.php?author=Yuriy%20Shikhanovich&page=1&sort=6a&affiliate_id=3307266" target="_blank">published adventures</a>.'
   },
   sidebar: {
     title: 'RtR: Random Table Roller',
