@@ -192,6 +192,16 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
         preferences={preferences}
       />
 
+      {/* Organization Tips */}
+      <div className="organization-tips">
+        <h3><i className="fas fa-folder-tree"></i> {TEXT.import.organization.title}</h3>
+        <ul>
+          <li><i className="fas fa-folder"></i> {TEXT.import.organization.folders}</li>
+          <li><i className="fas fa-tags"></i> {TEXT.import.organization.tags}</li>
+          <li><i className="fas fa-lightbulb"></i> {TEXT.import.organization.example}</li>
+        </ul>
+      </div>
+
       {error && <div className="error-message">{error}</div>}
     </div>
   );

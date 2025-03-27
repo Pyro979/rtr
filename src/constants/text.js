@@ -33,6 +33,12 @@ export const TEXT = {
     success: {
       created: 'Created a new table with {count} items:',
       clearButton: 'Clear'
+    },
+    organization: {
+      title: 'Organization Tips:',
+      folders: 'Use folder\\table_name format to organize tables in folders',
+      tags: 'Use #tag or [tag] in table name to add tags for filtering',
+      example: 'Example: "Dungeons\\Traps #combat [hazard]"'
     }
   },
   edit: {

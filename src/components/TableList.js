@@ -5,8 +5,8 @@ import './TableList.css';
 // Key for storing folder state in localStorage
 const FOLDER_STATE_KEY = 'folderExpandedState';
 
-// Regular expression to extract tags from square brackets
-const TAG_REGEX = /\[(.*?)\]/g;
+// Regular expression to extract tags from square brackets and hashtags
+const TAG_REGEX = /\[(.*?)\]|#(\w+)/g;
 
 const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
   const { tableId } = useParams();
@@ -81,7 +81,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
     const tags = [];
     let match;
     while ((match = TAG_REGEX.exec(name)) !== null) {
-      tags.push(match[1]);
+      tags.push(match[1] || match[2]);
     }
     return tags;
   };
