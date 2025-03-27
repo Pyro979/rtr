@@ -11,6 +11,7 @@ const TAG_REGEX = /\[(.*?)\]/g;
 const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
   const { tableId } = useParams();
   const activeRef = useRef(null);
+  const prevTableIdRef = useRef(null);
   const [expandedFolders, setExpandedFolders] = useState(() => {
     // Initialize from localStorage if available
     try {
@@ -40,9 +41,12 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
     }
   }, [tableId]);
 
-  // Auto-expand parent folders when a table is active
+  // Auto-expand parent folders when a table is initially selected
   useEffect(() => {
-    if (tableId) {
+    // Only run this effect if the tableId has changed
+    if (tableId && tableId !== prevTableIdRef.current) {
+      prevTableIdRef.current = tableId;
+      
       // Find the active table
       const activeTable = tables.find(table => table.id === tableId);
       if (activeTable && activeTable.name.includes('\\')) {
@@ -57,7 +61,10 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
         
         pathParts.forEach(folder => {
           currentPath = currentPath ? `${currentPath}\\${folder}` : folder;
-          newExpandedState[currentPath] = true;
+          // Only set to true if not already set (don't override user's manual collapse)
+          if (newExpandedState[currentPath] !== false) {
+            newExpandedState[currentPath] = true;
+          }
         });
         
         // Update expanded folders state if changes were made
@@ -202,7 +209,10 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
   };
 
   // Toggle folder expansion
-  const toggleFolder = (folderPath) => {
+  const toggleFolder = (folderPath, event) => {
+    // Stop the event from propagating to parent elements
+    event.stopPropagation();
+    
     setExpandedFolders(prev => ({
       ...prev,
       [folderPath]: !prev[folderPath]
@@ -245,7 +255,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
       <li key={folderPath} className="folder-item">
         <div 
           className="folder-header"
-          onClick={() => toggleFolder(folderPath)}
+          onClick={(e) => toggleFolder(folderPath, e)}
           style={{ paddingLeft: `${level * 16}px` }}
         >
           <span className="folder-icon">{isExpanded ? '📂' : '📁'}</span>
