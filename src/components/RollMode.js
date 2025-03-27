@@ -164,23 +164,23 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
           value={currentRollStyle} 
           onChange={(e) => setCurrentRollStyle(e.target.value)}
         >
-          <option value="normal">Normal Roll</option>
-          <option value="weighted">Weighted (Less Common Repeats)</option>
-          <option value="noRepeat">No Repeats</option>
+          <option value="normal">{TEXT.roll.styles.normal}</option>
+          <option value="weighted">{TEXT.roll.styles.weighted}</option>
+          <option value="noRepeat">{TEXT.roll.styles.noRepeat}</option>
         </select>
         <button onClick={handleResetHistory}>
-          {TEXT.roll.resetButton}
+          <i className="fas fa-history"></i> {TEXT.roll.resetButton}
         </button>
       </div>
       
       {currentRoll && (
         <div className="roll-result">
           <div className="result-container">
-            <p>Rolled: {currentRoll}</p>
+            <p>{TEXT.roll.rolledPrefix} {currentRoll}</p>
             <button 
               className="copy-button" 
               onClick={handleCopyResult} 
-              title="Copy result to clipboard"
+              title={TEXT.roll.copyTooltip}
             >
               <i className="fas fa-copy"></i>
             </button>
@@ -211,7 +211,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
                     {/* Only show counts for weighted mode */}
                     {currentRollStyle === 'weighted' && count > 0 && (
                       <span className="roll-count">
-                        ({count} {count === 1 ? 'time' : 'times'})
+                        ({count} {count === 1 ? TEXT.roll.rollCount.singular : TEXT.roll.rollCount.plural})
                       </span>
                     )}
                   </td>
@@ -229,8 +229,8 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         disabled={isRolling || allItemsRolled}
         aria-label="Roll on table"
       >
-        <img src={process.env.PUBLIC_URL + "/logo.svg"} alt="d20 dice" className="roll-icon-svg" />
-        <span className="roll-text">{allItemsRolled ? 'Done' : 'Roll (r)'}</span>
+        <i className="fas fa-dice-d20"></i>
+        <span className="roll-text">{allItemsRolled ? TEXT.roll.floatingButton.done : TEXT.roll.floatingButton.roll}</span>
       </button>
     </div>
   );

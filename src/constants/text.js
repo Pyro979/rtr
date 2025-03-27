@@ -9,7 +9,8 @@ export const TEXT = {
   },
   sidebar: {
     title: 'RtR: Random Table Roller',
-    importButton: '➕ Import Table'
+    importButton: 'Import Table',
+    optionsButton: 'Options'
   },
   import: {
     title: 'Import Table',
@@ -26,6 +27,10 @@ export const TEXT = {
     errors: {
       nameRequired: 'Table name is required',
       itemsRequired: 'At least one item is required'
+    },
+    success: {
+      created: 'Created a new table with {count} items:',
+      clearButton: 'Clear'
     }
   },
   edit: {
@@ -44,17 +49,41 @@ export const TEXT = {
     title: 'Roll Table',
     rollButton: 'Roll',
     resetButton: 'Reset History',
+    rolledPrefix: 'Rolled:',
+    copyTooltip: 'Copy result to clipboard',
     styles: {
-      normal: 'Normal',
-      weighted: 'Weighted',
+      normal: 'Normal Roll',
+      weighted: 'Weighted  (Less Common Repeats)',
       noRepeat: 'No Repeat'
+    },
+    rollCount: {
+      singular: 'time',
+      plural: 'times'
+    },
+    floatingButton: {
+      roll: 'Roll (r)',
+      done: 'Done'
     }
   },
   errors: {
     tableNotFound: 'Table not found',
-    rollFailed: 'Failed to roll on table'
+    rollFailed: 'Failed to roll on table',
+    noTablesFound: 'No tables match "{searchTerm}"'
   },
   navigation: {
     unsavedChanges: 'You have unsaved changes. Are you sure you want to leave?'
+  },
+  search: {
+    placeholder: 'Search tables...',
+    clearAriaLabel: 'Clear search'
+  },
+  resetData: {
+    title: 'Reset All Data',
+    warning: 'WARNING: This will delete ALL tables and roll history!',
+    confirmMessage: 'Only the default table will remain. This action cannot be undone.',
+    typeInstruction: 'Type "DELETE ALL DATA" to confirm:',
+    confirmButton: 'Reset All Data',
+    cancelButton: 'Cancel',
+    confirmText: 'DELETE ALL DATA'
   }
 };

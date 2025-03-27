@@ -8,7 +8,6 @@ import TableRoute from './routes/TableRoute';
 import OptionsPage from './components/OptionsPage';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useTableState } from './hooks/useTableState';
-import config from './config';
 
 const App = () => {
   const [sidebarKey, setSidebarKey] = useState(0);

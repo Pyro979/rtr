@@ -63,7 +63,7 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
   };
 
   const handleConfirmReset = () => {
-    if (confirmText === 'DELETE ALL DATA') {
+    if (confirmText === TEXT.resetData.confirmText) {
       // Close the sidebar and modal
       setIsOpen(false);
       setShowResetPrompt(false);
@@ -111,11 +111,11 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
         <Link to="/" className="sidebar-header" onClick={handleClose}>
           <h2>{TEXT.sidebar.title}</h2>
         </Link>
-        <IconButton to="/import" text={TEXT.sidebar.importButton} onClick={handleClose} />
+        <IconButton to="/import" text={<><i className="fas fa-plus"></i> {TEXT.sidebar.importButton}</>} onClick={handleClose} />
         <div className="sidebar-spacer"></div>
         <IconButton 
           to="/options" 
-          text={<><span className="gear-icon">⚙️</span> Options</>} 
+          text={<><i className="fas fa-cog"></i> {TEXT.sidebar.optionsButton}</>} 
           onClick={handleClose}
           className="options-button"
         />
@@ -123,18 +123,18 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
         <div className="sidebar-search">
           <input
             type="text"
-            placeholder="Search tables..."
+            placeholder={TEXT.search.placeholder}
             value={searchTerm}
             onChange={handleSearchChange}
-            aria-label="Search tables"
+            aria-label={TEXT.search.placeholder}
           />
           {searchTerm && (
             <button 
               className="clear-search" 
               onClick={clearSearch}
-              aria-label="Clear search"
+              aria-label={TEXT.search.clearAriaLabel}
             >
-              ×
+              <i className="fas fa-times"></i>
             </button>
           )}
         </div>
@@ -143,26 +143,26 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
         {showResetPrompt && (
           <div className="reset-prompt-overlay">
             <div className="reset-prompt">
-              <h3>Reset All Data</h3>
-              <p>⚠️ WARNING: This will delete ALL tables and roll history!</p>
-              <p>Only the default table will remain. This action cannot be undone.</p>
-              <p>Type "DELETE ALL DATA" to confirm:</p>
+              <h3>{TEXT.resetData.title}</h3>
+              <p><i className="fas fa-exclamation-triangle"></i> {TEXT.resetData.warning}</p>
+              <p>{TEXT.resetData.confirmMessage}</p>
+              <p>{TEXT.resetData.typeInstruction}</p>
               <input 
                 type="text" 
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                placeholder="DELETE ALL DATA"
+                placeholder={TEXT.resetData.confirmText}
               />
               <div className="reset-prompt-buttons">
                 <button 
                   onClick={handleConfirmReset}
-                  disabled={confirmText !== 'DELETE ALL DATA'}
-                  className={confirmText === 'DELETE ALL DATA' ? 'confirm-button' : 'disabled-button'}
+                  disabled={confirmText !== TEXT.resetData.confirmText}
+                  className={confirmText === TEXT.resetData.confirmText ? 'confirm-button' : 'disabled-button'}
                 >
-                  Reset All Data
+                  {TEXT.resetData.confirmButton}
                 </button>
                 <button onClick={handleCancelReset}>
-                  Cancel
+                  {TEXT.resetData.cancelButton}
                 </button>
               </div>
             </div>

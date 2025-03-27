@@ -119,7 +119,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
         displayName: (
           <>
             {cleanName} <sup>{seen + 1}</sup>
-            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}>🏷️</span>}
+            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}><i className="fas fa-tags"></i></span>}
           </>
         ),
         tags,
@@ -133,7 +133,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
         displayName: (
           <>
             {cleanName}
-            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}>🏷️</span>}
+            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}><i className="fas fa-tags"></i></span>}
           </>
         ),
         tags,
@@ -194,7 +194,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
             displayName: (
               <>
                 {tableName}
-                {table.tags.length > 0 && <span className="table-tags-icon" title={table.tags.join(', ')}>🏷️</span>}
+                {table.tags.length > 0 && <span className="table-tags-icon" title={table.tags.join(', ')}><i className="fas fa-tags"></i></span>}
               </>
             )
           } 

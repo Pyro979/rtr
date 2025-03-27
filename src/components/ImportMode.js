@@ -143,13 +143,13 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
         <div className="import-requirements">
           <div className="requirement-item">
             <span className={tableName.trim() ? "requirement-met" : "requirement-missing"}>
-              {tableName.trim() ? "✅" : "⬜"}
+              {tableName.trim() ? <i className="fas fa-check-square"></i> : <i className="far fa-square"></i>}
             </span>
             <span>Table name</span>
           </div>
           <div className="requirement-item">
             <span className={importText.trim() ? "requirement-met" : "requirement-missing"}>
-              {importText.trim() ? "✅" : "⬜"}
+              {importText.trim() ? <i className="fas fa-check-square"></i> : <i className="far fa-square"></i>}
             </span>
             <span>Table data</span>
           </div>
