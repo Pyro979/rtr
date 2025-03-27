@@ -17,9 +17,23 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
   const [preferences, setPreferences] = useState(() => loadImportPreferences());
   const [hasChanges, setHasChanges] = useState(false);
   const [importSuccess, setImportSuccess] = useState(null);
+  const [duplicateCount, setDuplicateCount] = useState(0);
+  const [headerText, setHeaderText] = useState(null);
 
   // Add navigation protection when there are unsaved changes
   useNavigationProtection(hasChanges);
+
+  // Update duplicate count and header text when import text changes
+  useEffect(() => {
+    if (importText.trim()) {
+      const tableData = parseTableItems(importText, preferences);
+      setDuplicateCount(tableData.duplicateCount);
+      setHeaderText(tableData.header);
+    } else {
+      setDuplicateCount(0);
+      setHeaderText(null);
+    }
+  }, [importText, preferences]);
 
   // Debug state values
   useEffect(() => {
@@ -42,8 +56,8 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
       return;
     }
 
-    const items = parseTableItems(importText, preferences);
-    if (items.length === 0) {
+    const tableData = parseTableItems(importText, preferences);
+    if (tableData.items.length === 0) {
       setError(TEXT.import.errors.itemsRequired);
       return;
     }
@@ -52,7 +66,7 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
     const newTable = {
       id: tableId,
       name: tableName.trim(),
-      items
+      items: tableData.items
     };
 
     onImport(newTable);
@@ -61,7 +75,7 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
     setImportSuccess({
       id: tableId,
       name: tableName.trim(),
-      itemCount: items.length
+      itemCount: tableData.items.length
     });
     
     // Clear the form for a new import
@@ -120,7 +134,9 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
               checked={preferences.removeDuplicates}
               onChange={(e) => updatePreference('removeDuplicates', e.target.checked)}
             />
-            {TEXT.import.preferences.removeDuplicates}
+            {duplicateCount > 0 
+              ? TEXT.import.preferences.removeDuplicatesCount.replace('{count}', duplicateCount)
+              : TEXT.import.preferences.removeDuplicates}
           </label>
           <label className="preference-item">
             <input
@@ -129,6 +145,9 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
               onChange={(e) => updatePreference('removeHeader', e.target.checked)}
             />
             {TEXT.import.preferences.removeHeader}
+            {preferences.removeHeader && headerText && (
+              <span className="header-removed-text"> {TEXT.import.preferences.headerRemoved}</span>
+            )}
           </label>
         </div>
         <button 

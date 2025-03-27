@@ -172,6 +172,22 @@
   color: #9e9e9e;
 }
 
+/* Header removed and duplicates styling */
+.header-removed-text {
+  font-style: italic;
+  color: #888;
+  font-size: 0.9em;
+}
+
+.removed-header {
+  color: #888;
+  font-style: italic;
+}
+
+.removed-header del {
+  text-decoration: line-through;
+}
+
 /* Success message */
 .import-success {
   background-color: #e8f5e9;

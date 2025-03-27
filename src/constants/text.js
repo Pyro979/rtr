@@ -22,7 +22,9 @@ export const TEXT = {
       removeLeadingNumbers: 'Remove leading numbers',
       removeBulletPoints: 'Remove bullet points',
       removeDuplicates: 'Remove duplicates',
-      removeHeader: 'Remove header'
+      removeDuplicatesCount: 'Remove duplicates ({count})',
+      removeHeader: 'Remove header',
+      headerRemoved: '(header removed)'
     },
     errors: {
       nameRequired: 'Table name is required',

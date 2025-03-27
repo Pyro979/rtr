@@ -8,7 +8,13 @@ export const parseTableItems = (text, options = {}) => {
   } = options;
 
   let lines = text.split('\n');
-  
+
+  // Store header information if available
+  let header = null;
+  if (lines.length > 0) {
+    header = lines[0].trim();
+  }
+
   // Remove header (first line) if enabled
   if (removeHeader && lines.length > 0) {
     lines = lines.slice(1);
@@ -33,11 +39,18 @@ export const parseTableItems = (text, options = {}) => {
     });
   }
 
+  // Count duplicates before removing them
+  const uniqueItems = [...new Set(items)];
+  const duplicateCount = items.length - uniqueItems.length;
   if (removeDuplicates) {
-    items = [...new Set(items)];
+    items = uniqueItems;
   }
 
-  return items;
+  return {
+    items,
+    duplicateCount,
+    header
+  };
 };
 
 // Roll on a table with different styles
@@ -59,16 +72,16 @@ export const rollOnTable = (table, style, history = {}) => {
 
     const totalWeight = weights.reduce((a, b) => a + b, 0);
     let random = Math.random() * totalWeight;
-    
+
     index = weights.findIndex(weight => {
       random -= weight;
       return random <= 0;
     });
   }
 
-  console.log('Rolling on table:', { 
-    style, 
-    index, 
+  console.log('Rolling on table:', {
+    style,
+    index,
     result: table.items[index],
     history
   });
@@ -81,26 +94,26 @@ export const parseDiceNotation = (text) => {
   // Regular expression to match dice notation patterns
   // Matches patterns like 1d6, 2d8+3, 1d20-2, etc.
   const diceRegex = /(\d+)d(\d+)(?:([-+])(\d+))?/g;
-  
+
   let match;
   let hasMatches = false;
-  
+
   // Create a copy of the text to modify
   let modifiedText = text;
-  
+
   // Find all dice notations in the text
   while ((match = diceRegex.exec(text)) !== null) {
     hasMatches = true;
-    
+
     // Extract dice components
     const [fullMatch, numDice, diceSize, operator, modifier] = match;
-    
+
     // Roll the dice
     let total = 0;
     for (let i = 0; i < parseInt(numDice, 10); i++) {
       total += Math.floor(Math.random() * parseInt(diceSize, 10)) + 1;
     }
-    
+
     // Apply modifier if present
     if (operator && modifier) {
       const modValue = parseInt(modifier, 10);
@@ -108,14 +121,14 @@ export const parseDiceNotation = (text) => {
       // Ensure the result is at least 1
       total = Math.max(1, total);
     }
-    
+
     // Replace the dice notation with the result using plain text
     modifiedText = modifiedText.replace(
-      fullMatch, 
+      fullMatch,
       `${fullMatch} = ${total}`
     );
   }
-  
+
   return {
     text: modifiedText,
     hasMatches

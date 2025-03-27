@@ -58,6 +58,21 @@
   padding: 20px;
 }
 
+/* Removed header styling */
+.removed-header {
+  color: #888;
+  font-style: italic;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  border-left: 3px solid #ddd;
+}
+
+.header-removed-text {
+  font-style: italic;
+  color: #888;
+  font-size: 0.9em;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .editor-preview-container {
