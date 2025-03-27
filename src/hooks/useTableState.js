@@ -7,7 +7,7 @@ const ROLL_HISTORY_KEY = 'rollHistory';
 
 const DEFAULT_ENEMIES_TABLE = {
   id: uuidv4(),
-  name: 'Random Enemies',
+  name: 'Defaults\Random Enemies [enemy][default]',
   items: [
     'Goblin', '1d4 Zombies', 'Bandit', '1d6+1 Orcs', '1d4+1 Wolf', '1d3 Nothic', 'Dragon', 'Troll', 'Giant', 'Gargoyle',
     'Skeleton', '1d3 Gnolls', 'Kobold', 'Wraith', 'Mimic', 'Hobgoblin', '1d2 Banshees', 'Lich', '1d3+2 Ogres', 'Bugbear',
@@ -17,7 +17,7 @@ const DEFAULT_ENEMIES_TABLE = {
 
 const DEFAULT_TREASURE_TABLE = {
   id: uuidv4(),
-  name: 'Random Treasure',
+  name: 'Defaults\Random Treasure [treasure][default]',
   items: [
     '1d100+50 Gold coins', 
     '1d20 Silver coins', 
@@ -54,7 +54,7 @@ const DEFAULT_TREASURE_TABLE = {
 
 const DEFAULT_WEATHER_TABLE = {
   id: uuidv4(),
-  name: 'Random Weather',
+  name: 'Defaults\Random Weather [env][default]',
   items: [
     'Clear skies and mild temperature', 
     'Overcast with light breeze', 
