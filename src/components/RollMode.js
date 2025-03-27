@@ -229,7 +229,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         disabled={isRolling || allItemsRolled}
         aria-label="Roll on table"
       >
-        <i className="fas fa-dice-d20"></i>
+        <img src={process.env.PUBLIC_URL + "/logo.svg"} alt="d20 dice" className="roll-icon-svg" />
         <span className="roll-text">{allItemsRolled ? TEXT.roll.floatingButton.done : TEXT.roll.floatingButton.roll}</span>
       </button>
     </div>
