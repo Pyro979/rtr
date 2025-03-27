@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createHashRouter, RouterProvider, Navigate } from 'react-router-dom';
 import './App.css';
 import ImportMode from './components/ImportMode';
@@ -11,6 +11,8 @@ import { useTableState } from './hooks/useTableState';
 import config from './config';
 
 const App = () => {
+  const [sidebarKey, setSidebarKey] = useState(0);
+  
   const {
     tables,
     handleImport,
@@ -28,9 +30,16 @@ const App = () => {
     console.log('App component rollHistory:', rollHistory);
   }, [rollHistory]);
 
+  // Custom import handler that also triggers sidebar refresh
+  const handleImportWithRefresh = (newTable) => {
+    handleImport(newTable);
+    // Force sidebar to re-render by changing its key
+    setSidebarKey(prevKey => prevKey + 1);
+  };
+
   const Layout = ({ children }) => (
     <div className="App">
-      <Sidebar tables={tables} onResetAllHistory={handleResetAllHistory} />
+      <Sidebar key={sidebarKey} tables={tables} onResetAllHistory={handleResetAllHistory} />
       <div className="main-content">
         {children}
       </div>
@@ -46,7 +55,7 @@ const App = () => {
     },
     {
       path: "/import",
-      element: <Layout><ImportMode onImport={handleImport} /></Layout>,
+      element: <Layout><ImportMode onImport={handleImportWithRefresh} /></Layout>,
       errorElement: <Layout><ErrorBoundary /></Layout>
     },
     {
@@ -62,7 +71,7 @@ const App = () => {
             tables={tables}
             onUpdateTable={handleUpdateTable}
             onDeleteTable={handleDeleteTable}
-            onDuplicate={handleImport}
+            onDuplicate={handleImportWithRefresh}
             onRoll={handleRoll}
             onResetHistory={handleResetHistory}
             rollStyle={rollStyle}
@@ -80,7 +89,7 @@ const App = () => {
             tables={tables}
             onUpdateTable={handleUpdateTable}
             onDeleteTable={handleDeleteTable}
-            onDuplicate={handleImport}
+            onDuplicate={handleImportWithRefresh}
             onRoll={handleRoll}
             onResetHistory={handleResetHistory}
             rollStyle={rollStyle}

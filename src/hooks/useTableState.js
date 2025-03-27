@@ -131,11 +131,20 @@ export const useTableState = () => {
 
   const handleImport = (newTable) => {
     console.log('Importing table:', newTable);
-    setTables(prev => {
-      const newTables = [...prev, newTable];
-      console.log('New tables state:', newTables);
-      return newTables;
-    });
+    
+    // Create a completely new array to ensure React detects the change
+    const updatedTables = [...tables, newTable];
+    
+    // Force an update by setting state with the new array
+    setTables(updatedTables);
+    
+    // Also update localStorage directly to ensure immediate persistence
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTables));
+    
+    console.log('New tables state after import:', updatedTables);
+    
+    // Return the new table ID for potential use by the caller
+    return newTable.id;
   };
 
   const handleUpdateTable = (updatedTable) => {

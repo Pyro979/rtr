@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import IconButton from './IconButton';
 import TableList from './TableList';
@@ -10,7 +10,49 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
   const [showResetPrompt, setShowResetPrompt] = useState(false);
   const [confirmText, setConfirmText] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentTables, setCurrentTables] = useState(tables);
   const navigate = useNavigate();
+
+  // Always sync with the latest tables from localStorage
+  useEffect(() => {
+    const checkForUpdates = () => {
+      try {
+        const storedTables = localStorage.getItem('randomTables');
+        if (storedTables) {
+          const parsedTables = JSON.parse(storedTables);
+          // Only update if the tables have changed
+          if (JSON.stringify(parsedTables) !== JSON.stringify(currentTables)) {
+            console.log('Sidebar: Tables updated from localStorage', parsedTables);
+            setCurrentTables(parsedTables);
+          }
+        }
+      } catch (error) {
+        console.error('Error reading tables from localStorage:', error);
+      }
+    };
+
+    // Check immediately
+    checkForUpdates();
+
+    // Also check whenever the component receives focus
+    window.addEventListener('focus', checkForUpdates);
+    
+    // Set up an interval to check for updates
+    const intervalId = setInterval(checkForUpdates, 1000);
+    
+    return () => {
+      window.removeEventListener('focus', checkForUpdates);
+      clearInterval(intervalId);
+    };
+  }, [currentTables]);
+
+  // Also update when the tables prop changes
+  useEffect(() => {
+    if (tables && tables.length > 0 && JSON.stringify(tables) !== JSON.stringify(currentTables)) {
+      console.log('Sidebar: Tables updated from props', tables);
+      setCurrentTables(tables);
+    }
+  }, [tables]);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -96,7 +138,7 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
             </button>
           )}
         </div>
-        <TableList tables={tables} onLinkClick={handleClose} searchTerm={searchTerm} />
+        <TableList tables={currentTables} onLinkClick={handleClose} searchTerm={searchTerm} />
         
         {showResetPrompt && (
           <div className="reset-prompt-overlay">
