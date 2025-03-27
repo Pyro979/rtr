@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
-const TableList = ({ tables = [], onLinkClick }) => {
+const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
   const { tableId } = useParams();
   const activeRef = useRef(null);
 
@@ -51,9 +51,25 @@ const TableList = ({ tables = [], onLinkClick }) => {
     return acc;
   }, []);
 
+  // Filter tables based on search term
+  const filteredTables = searchTerm.trim() === '' 
+    ? processedTables 
+    : processedTables.filter(table => 
+        table.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+  // Show a message when no tables match the search
+  if (filteredTables.length === 0 && searchTerm.trim() !== '') {
+    return (
+      <div className="no-tables-found">
+        <p>No tables match "{searchTerm}"</p>
+      </div>
+    );
+  }
+
   return (
     <ul className="table-list">
-      {processedTables.map(table => {
+      {filteredTables.map(table => {
         const isActive = table.id === tableId;
         const paddedCount = String("d"+table.itemCount).padStart(4, ' ');
         

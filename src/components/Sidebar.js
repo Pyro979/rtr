@@ -9,6 +9,7 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showResetPrompt, setShowResetPrompt] = useState(false);
   const [confirmText, setConfirmText] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   const handleClose = () => {
@@ -44,6 +45,14 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
     setConfirmText('');
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const clearSearch = () => {
+    setSearchTerm('');
+  };
+
   return (
     <>
       <button 
@@ -68,8 +77,26 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
           onClick={handleClose}
           className="options-button"
         />
-        
-        <TableList tables={tables} onLinkClick={handleClose} />
+                
+        <div className="sidebar-search">
+          <input
+            type="text"
+            placeholder="Search tables..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            aria-label="Search tables"
+          />
+          {searchTerm && (
+            <button 
+              className="clear-search" 
+              onClick={clearSearch}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </div>
+        <TableList tables={tables} onLinkClick={handleClose} searchTerm={searchTerm} />
         
         {showResetPrompt && (
           <div className="reset-prompt-overlay">
