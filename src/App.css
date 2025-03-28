@@ -41,7 +41,7 @@
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  padding: 3px 20px;
   overflow-y: auto;
   position: relative;
   background-color: transparent; /* Ensure no background color is interfering */

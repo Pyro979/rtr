@@ -1,5 +1,4 @@
 .import-mode {
-  padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -266,6 +265,37 @@
   margin-right: 10px;
   width: 16px;
   color: #ff8f00;
+}
+
+/* Organization tips */
+.organization-tips {
+  background-color: #f5f2ea;
+  border: 1px solid #e0d5c1;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+}
+
+.organization-tips h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #5d4037;
+}
+
+.organization-tips ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.organization-tips li {
+  margin-bottom: 8px;
+  list-style-type: none;
+}
+
+.organization-tips i {
+  margin-right: 10px;
+  color: #8d6e63;
 }
 
 /* Mobile responsiveness */

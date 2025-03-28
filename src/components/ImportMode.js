@@ -106,6 +106,7 @@ const ImportMode = ({ onImport }) => {
 
   return (
     <div className="import-mode">
+      <h2 className="page-title">{TEXT.import.title}</h2>
       {importSuccess && (
         <div className="import-success">
           <div className="success-message">
@@ -208,14 +209,15 @@ const ImportMode = ({ onImport }) => {
         preferences={preferences}
       />
       
-      <div className="import-organization-tips">
+      <div className="organization-tips">
         <h3>{TEXT.import.organization.title}</h3>
         <ul>
-          <li>{TEXT.import.organization.folders}</li>
-          <li>{TEXT.import.organization.tags}</li>
-          <li><em>{TEXT.import.organization.example}</em></li>
+          <li><i className="fas fa-folder"></i> {TEXT.import.organization.folders}</li>
+          <li><i className="fas fa-tag"></i> {TEXT.import.organization.tags}</li>
+          <li><i className="fas fa-lightbulb"></i> {TEXT.import.organization.example}</li>
         </ul>
       </div>
+      
     </div>
   );
 };
