@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 import TableEditorWithPreview from './shared/TableEditorWithPreview';
 import { useNavigationProtection } from '../hooks/useNavigationProtection';
 import { TEXT } from '../constants/text';
+import { loadTables } from '../utils/tableUtils';
+import { isDuplicateName } from '../utils/tableNameUtils';
 import '../styles/shared.css';
 import './EditMode.css';
 
@@ -14,6 +16,12 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
   const [editedText, setEditedText] = useState(table.items.join('\n'));
   const [hasChanges, setHasChanges] = useState(false);
   const [duplicatedTableId, setDuplicatedTableId] = useState(null);
+  const [existingTables, setExistingTables] = useState(() => loadTables());
+
+  // Refresh existing tables when component mounts
+  useEffect(() => {
+    setExistingTables(loadTables());
+  }, []);
 
   useEffect(() => {
     if (duplicatedTableId) {
@@ -31,13 +39,28 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
       setError(TEXT.edit.errors.nameRequired);
       return;
     }
+    
+    // Check for duplicate table name only if the name has changed
+    if (editedName.trim() !== table.name && isDuplicateName(existingTables, editedName.trim(), table.id)) {
+      setError(TEXT.import.errors.duplicateName);
+      return;
+    }
+    
     setError('');
     const items = editedText.split('\n').filter(item => item.trim());
     if (items.length === 0) {
       setError(TEXT.edit.errors.itemsRequired);
       return;
     }
-    onUpdate({ ...table, name: editedName.trim(), items });
+    
+    const updatedTable = { ...table, name: editedName.trim(), items };
+    onUpdate(updatedTable);
+    
+    // Update the local list of tables
+    setExistingTables(existingTables.map(t => 
+      t.id === table.id ? updatedTable : t
+    ));
+    
     setHasChanges(false);
   };
 
@@ -64,6 +87,10 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
     
     console.log('Duplicating table:', newTable);
     onDuplicate(newTable);
+    
+    // Update the local list of tables
+    setExistingTables([...existingTables, newTable]);
+    
     setDuplicatedTableId(newId);
   };
 

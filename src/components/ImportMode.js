@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import TableEditorWithPreview from './shared/TableEditorWithPreview';
 import { useNavigationProtection } from '../hooks/useNavigationProtection';
-import { parseTableItems, loadImportPreferences, saveImportPreferences } from '../utils/tableUtils';
+import { parseTableItems, loadImportPreferences, saveImportPreferences, loadTables } from '../utils/tableUtils';
+import { isDuplicateName } from '../utils/tableNameUtils';
 import { TEXT } from '../constants/text';
 import { Link } from 'react-router-dom';
 import '../styles/shared.css';
@@ -19,6 +20,12 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
   const [importSuccess, setImportSuccess] = useState(null);
   const [duplicateCount, setDuplicateCount] = useState(0);
   const [headerText, setHeaderText] = useState(null);
+  const [existingTables, setExistingTables] = useState(() => loadTables());
+
+  // Refresh existing tables when component mounts
+  useEffect(() => {
+    setExistingTables(loadTables());
+  }, []);
 
   // Add navigation protection when there are unsaved changes
   useNavigationProtection(hasChanges);
@@ -56,6 +63,12 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
       return;
     }
 
+    // Check for duplicate table name
+    if (isDuplicateName(existingTables, tableName.trim())) {
+      setError(TEXT.import.errors.duplicateName);
+      return;
+    }
+
     const tableData = parseTableItems(importText, preferences);
     if (tableData.items.length === 0) {
       setError(TEXT.import.errors.itemsRequired);
@@ -70,6 +83,9 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
     };
 
     onImport(newTable);
+    
+    // Update existing tables with the new one
+    setExistingTables([...existingTables, newTable]);
     
     // Set success state instead of navigating away
     setImportSuccess({

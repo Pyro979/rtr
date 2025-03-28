@@ -28,7 +28,8 @@ export const TEXT = {
     },
     errors: {
       nameRequired: 'Table name is required',
-      itemsRequired: 'At least one item is required'
+      itemsRequired: 'At least one item is required',
+      duplicateName: 'A table with this name already exists. Please use a different name or add tags/folders to make it unique.'
     },
     success: {
       created: 'Created a new table with {count} items:',

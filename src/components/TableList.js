@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { TAG_REGEX, extractTags } from '../utils/tableNameUtils';
 import './TableList.css';
 
 // Key for storing folder state in localStorage
 const FOLDER_STATE_KEY = 'folderExpandedState';
-
-// Regular expression to extract tags from square brackets and hashtags
-const TAG_REGEX = /\[(.*?)\]|#(\w+)/g;
 
 const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
   const { tableId } = useParams();
@@ -76,70 +74,31 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
     }
   }, [tableId, tables, expandedFolders]);
 
-  // Extract tags from table name
-  const extractTags = (name) => {
-    const tags = [];
-    let match;
-    while ((match = TAG_REGEX.exec(name)) !== null) {
-      tags.push(match[1] || match[2]);
-    }
-    return tags;
-  };
-
   // Clean table name by removing tags
   const cleanTableName = (name) => {
     return name.replace(TAG_REGEX, '').trim();
   };
 
-  // Count duplicate names
-  const nameCount = tables.reduce((acc, table) => {
-    const baseName = cleanTableName(table.name).replace(/\{Copy \d+\}$/, '').trim();
-    acc[baseName] = (acc[baseName] || 0) + 1;
-    return acc;
-  }, {});
-
-  // Add indices and handle duplicates
+  // Add indices and process tables
   const processedTables = tables.reduce((acc, table) => {
     const cleanName = cleanTableName(table.name);
     const baseName = cleanName.replace(/\{Copy \d+\}$/, '').trim();
-    const count = nameCount[baseName];
     const itemCount = table.items.length;
     const tags = extractTags(table.name);
     
-    if (count > 1) {
-      // Find how many of this name we've seen so far
-      const seen = acc.filter(t => 
-        t.baseName === baseName
-      ).length;
-      
-      acc.push({
-        ...table,
-        baseName,
-        cleanName,
-        displayName: (
-          <>
-            {cleanName} <sup>{seen + 1}</sup>
-            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}><i className="fas fa-tags"></i></span>}
-          </>
-        ),
-        tags,
-        itemCount
-      });
-    } else {
-      acc.push({
-        ...table,
-        baseName,
-        cleanName,
-        displayName: (
-          <>
-            {cleanName}
-            {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}><i className="fas fa-tags"></i></span>}
-          </>
-        ),
-        tags,
-        itemCount
-      });
-    }
+    acc.push({
+      ...table,
+      baseName,
+      cleanName,
+      displayName: (
+        <>
+          {cleanName}
+          {tags.length > 0 && <span className="table-tags-icon" title={tags.join(', ')}><i className="fas fa-tags"></i></span>}
+        </>
+      ),
+      tags,
+      itemCount
+    });
     
     return acc;
   }, []);
@@ -187,7 +146,8 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
         });
         
         // Add the table to the deepest level
-        currentLevel[tableName] = { 
+        // Use table.id as key to prevent overwriting tables with the same name
+        currentLevel[`${tableName}_${table.id}`] = { 
           __isTable: true, 
           table: { 
             ...table, 
@@ -201,7 +161,8 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
         };
       } else {
         // Tables without slashes go at the root level
-        folderStructure[table.cleanName] = { __isTable: true, table };
+        // Use table.id as key to prevent overwriting tables with the same name
+        folderStructure[`${table.cleanName}_${table.id}`] = { __isTable: true, table };
       }
     });
     
@@ -236,9 +197,13 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
       const [nameA, itemA] = a;
       const [nameB, itemB] = b;
       
+      // Extract the display names without the ID suffix
+      const displayNameA = nameA.includes('_') ? nameA.split('_')[0] : nameA;
+      const displayNameB = nameB.includes('_') ? nameB.split('_')[0] : nameB;
+      
       // If both are folders or both are tables, sort alphabetically
       if ((itemA.__isFolder && itemB.__isFolder) || (itemA.__isTable && itemB.__isTable)) {
-        return nameA.localeCompare(nameB, undefined, { sensitivity: 'base' });
+        return displayNameA.localeCompare(displayNameB, undefined, { sensitivity: 'base' });
       }
       
       // Otherwise, folders come first
@@ -251,6 +216,9 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
     const folderPath = path ? `${path}\\${folderName}` : folderName;
     const isExpanded = isFolderExpanded(folderPath);
     
+    // Extract the actual folder name without the ID suffix if present
+    const displayFolderName = folderName.includes('_') ? folderName.split('_')[0] : folderName;
+    
     return (
       <li key={folderPath} className="folder-item">
         <div 
@@ -259,7 +227,7 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
           style={{ paddingLeft: `${level * 16}px` }}
         >
           <span className="folder-icon">{isExpanded ? '📂' : '📁'}</span>
-          <span className="folder-name">{folderName}</span>
+          <span className="folder-name">{displayFolderName}</span>
         </div>
         
         {isExpanded && (
