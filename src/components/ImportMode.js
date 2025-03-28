@@ -15,8 +15,7 @@ import { Link } from 'react-router-dom';
 import '../styles/shared.css';
 import './ImportMode.css';
 
-const ImportMode = ({ onImport, navigateAfterImport }) => {
-  const navigate = useNavigate();
+const ImportMode = ({ onImport }) => {
   const [importText, setImportText] = useState('');
   const [tableName, setTableName] = useState('');
   const [error, setError] = useState('');

@@ -20,7 +20,7 @@ const TableEditorWithPreview = ({
   }, [text, preferences]);
 
   const previewItems = tableData.items;
-  const { header, duplicateCount } = tableData;
+  const { header } = tableData;
 
   return (
     <div className={`editor-preview-container ${className}`}>

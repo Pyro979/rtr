@@ -162,7 +162,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       <div className="roll-controls">
         <select 
           value={currentRollStyle} 
-          onChange={(e) => setCurrentRollStyle(e.target.value)}
+          onChange={(e) => handleStyleChange(e.target.value)}
         >
           <option value="normal">{TEXT.roll.styles.normal}</option>
           <option value="weighted">{TEXT.roll.styles.weighted}</option>

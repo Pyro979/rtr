@@ -22,6 +22,8 @@
     "build:github": "cross-env REACT_APP_DEPLOY_TARGET=github npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
     "package": "npm run build:itch && node scripts/package.js",
     "publish": "npm run build:itch && node scripts/publish.js",
     "deploy:github": "npm run build:github && gh-pages -d build",

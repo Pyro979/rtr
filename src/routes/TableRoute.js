@@ -2,7 +2,6 @@ import React from 'react';
 import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
 import EditMode from '../components/EditMode';
 import RollMode from '../components/RollMode';
-import { TEXT } from '../constants/text';
 
 const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll, onResetHistory, rollStyle, rollHistory }) => {
   const { tableId } = useParams();
