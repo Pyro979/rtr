@@ -166,3 +166,241 @@
   border: 1px solid #ccc;
   color: #333;
 }
+
+/* Import/Export styles */
+.import-button,
+.export-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s;
+}
+
+.import-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}
+
+.import-button:hover {
+  background-color: #0d8aee;
+}
+
+.export-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+.export-button:hover {
+  background-color: #43a047;
+}
+
+.export-button:disabled {
+  background-color: #e0e0e0;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.import-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.json-drop-area {
+  border: 2px dashed #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  width: 100%;
+}
+
+.json-drop-area:hover {
+  border-color: #2196f3;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.json-drop-area i {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #2196f3;
+}
+
+/* JSON import preview styles */
+.json-import-preview {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.json-import-preview h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.duplicate-warning {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.duplicate-warning p {
+  margin: 0;
+  color: #856404;
+}
+
+.toggle-all-button {
+  background-color: transparent;
+  border: 1px solid #856404;
+  color: #856404;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9em;
+}
+
+.toggle-all-button:hover {
+  background-color: #856404;
+  color: white;
+}
+
+.table-preview-list {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.table-preview-item {
+  display: flex;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+}
+
+.table-preview-item:last-child {
+  border-bottom: none;
+}
+
+.table-preview-item.duplicate-item {
+  background-color: #fff3cd;
+}
+
+.table-preview-checkbox {
+  margin-right: 15px;
+}
+
+.table-preview-info {
+  flex: 1;
+}
+
+.table-preview-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.table-preview-count {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.table-preview-override {
+  margin-left: 15px;
+}
+
+.json-import-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.primary-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}
+
+.primary-button:hover {
+  background-color: #0d8aee;
+}
+
+.primary-button:disabled {
+  background-color: #e0e0e0;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.secondary-button {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.secondary-button:hover {
+  background-color: #f5f5f5;
+}
+
+/* Success message styles */
+.import-success {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-button {
+  padding: 5px 10px;
+  font-size: 0.9em;
+}
+
+/* Error message styles */
+.error-message {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}

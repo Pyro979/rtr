@@ -147,6 +147,75 @@ export const useTableState = () => {
     return newTable.id;
   };
 
+  // Handle bulk import of multiple tables at once
+  const handleBulkImport = (newTables, overrideOptions = {}) => {
+    if (!newTables || newTables.length === 0) {
+      return 0;
+    }
+    
+    console.log(`Bulk importing ${newTables.length} tables`);
+    
+    // Get the current tables from localStorage to ensure we have the latest state
+    const currentTables = loadTables();
+    
+    // Filter out duplicates within the imported file itself
+    // Keep only the first occurrence of each table name
+    const uniqueNewTables = [];
+    const importedNames = new Set();
+    
+    newTables.forEach(table => {
+      if (!importedNames.has(table.name)) {
+        uniqueNewTables.push(table);
+        importedNames.add(table.name);
+      } else {
+        console.log(`Skipping duplicate table in import file: ${table.name}`);
+      }
+    });
+    
+    // Process each table, checking for duplicates with existing tables
+    const tablesToAdd = [];
+    
+    uniqueNewTables.forEach(newTable => {
+      // Check if this table name already exists
+      const existingTableIndex = currentTables.findIndex(t => t.name === newTable.name);
+      
+      if (existingTableIndex >= 0) {
+        // If this table should override an existing one
+        if (overrideOptions[newTable.id]) {
+          console.log(`Overriding existing table: ${newTable.name}`);
+          // Replace the existing table with the new one (keeping the original ID)
+          currentTables[existingTableIndex] = {
+            ...newTable,
+            id: currentTables[existingTableIndex].id // Keep the original ID
+          };
+        } else {
+          console.log(`Skipping table with duplicate name: ${newTable.name}`);
+        }
+      } else {
+        // This is a new table, add it to the list
+        tablesToAdd.push(newTable);
+      }
+    });
+    
+    // Create the final updated tables array
+    const updatedTables = [...currentTables, ...tablesToAdd];
+    
+    // Update state
+    setTables(updatedTables);
+    
+    // Update localStorage directly
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTables));
+    
+    const addedCount = tablesToAdd.length;
+    const overriddenCount = Object.values(overrideOptions).filter(Boolean).length;
+    const totalImported = addedCount + overriddenCount;
+    
+    console.log(`Successfully imported ${totalImported} tables (${addedCount} new, ${overriddenCount} overwritten). New total: ${updatedTables.length}`);
+    
+    // Return the number of tables imported
+    return totalImported;
+  };
+
   const handleUpdateTable = (updatedTable) => {
     console.log('Updating table:', updatedTable);
     setTables(prev => prev.map(table => 
@@ -260,6 +329,7 @@ export const useTableState = () => {
     rollStyle,
     rollHistory,
     handleImport,
+    handleBulkImport,
     handleUpdateTable,
     handleDeleteTable,
     handleRoll,

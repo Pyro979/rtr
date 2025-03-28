@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import TableEditorWithPreview from './shared/TableEditorWithPreview';
 import { useNavigationProtection } from '../hooks/useNavigationProtection';
-import { parseTableItems, loadImportPreferences, saveImportPreferences, loadTables } from '../utils/tableUtils';
+import { 
+  parseTableItems, 
+  loadImportPreferences, 
+  saveImportPreferences, 
+  loadTables
+} from '../utils/tableUtils';
 import { isDuplicateName } from '../utils/tableNameUtils';
 import { TEXT } from '../constants/text';
 import { Link } from 'react-router-dom';
@@ -98,13 +103,6 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
     setImportText('');
     setTableName('');
     setHasChanges(false);
-    
-    // Don't navigate away automatically
-    // if (navigateAfterImport) {
-    //   navigateAfterImport(tableId);
-    // } else {
-    //   navigate(`/table/${tableId}/roll`);
-    // }
   };
 
   return (
@@ -121,10 +119,12 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
             className="action-button secondary-button clear-button"
             onClick={() => setImportSuccess(null)}
           >
-            Clear
+            {TEXT.import.success.clearButton}
           </button>
         </div>
       )}
+      
+      {error && <div className="error-message">{error}</div>}
       
       <div className="import-preferences">
         <div className="preferences-options">
@@ -204,21 +204,19 @@ const ImportMode = ({ onImport, navigateAfterImport }) => {
           setError('');
           setHasChanges(name.trim() !== '' || importText.trim() !== '');
         }}
-        placeholder={TEXT.import.contentPlaceholder}
+        namePlaceholder={TEXT.import.namePlaceholder}
+        contentPlaceholder={TEXT.import.contentPlaceholder}
         preferences={preferences}
       />
-
-      {/* Organization Tips */}
-      <div className="organization-tips">
-        <h3><i className="fas fa-folder-tree"></i> {TEXT.import.organization.title}</h3>
+      
+      <div className="import-organization-tips">
+        <h3>{TEXT.import.organization.title}</h3>
         <ul>
-          <li><i className="fas fa-folder"></i> {TEXT.import.organization.folders}</li>
-          <li><i className="fas fa-tags"></i> {TEXT.import.organization.tags}</li>
-          <li><i className="fas fa-lightbulb"></i> {TEXT.import.organization.example}</li>
+          <li>{TEXT.import.organization.folders}</li>
+          <li>{TEXT.import.organization.tags}</li>
+          <li><em>{TEXT.import.organization.example}</em></li>
         </ul>
       </div>
-
-      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };

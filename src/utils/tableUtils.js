@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 // Clean up text input into table items
 export const parseTableItems = (text, options = {}) => {
   const {
@@ -157,4 +159,93 @@ export const loadImportPreferences = () => {
 
 export const saveImportPreferences = (preferences) => {
   localStorage.setItem('importPreferences', JSON.stringify(preferences));
+};
+
+// Export tables to JSON
+export const exportTablesToJson = (tables) => {
+  try {
+    // Create a copy of the tables to export, excluding IDs
+    const tablesToExport = tables.map(table => ({
+      name: table.name,
+      items: table.items
+    }));
+    
+    // Create a Blob with the JSON data
+    const blob = new Blob([JSON.stringify(tablesToExport, null, 2)], { type: 'application/json' });
+    
+    // Create a download link and trigger the download
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'random-tables.json';
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }, 100);
+    
+    return { success: true };
+  } catch (error) {
+    console.error('Error exporting tables:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Parse JSON file content for import
+export const parseJsonTables = (jsonContent) => {
+  try {
+    // Parse the JSON content
+    const parsedData = JSON.parse(jsonContent);
+    
+    // Ensure the parsed data is an array
+    if (!Array.isArray(parsedData)) {
+      throw new Error('JSON data must be an array of tables');
+    }
+    
+    // Validate each table in the array
+    const validatedTables = parsedData.map(table => {
+      // Ensure required fields exist
+      if (!table.name || !Array.isArray(table.items)) {
+        throw new Error(`Invalid table format: ${JSON.stringify(table)}`);
+      }
+      
+      // Return a validated table object
+      return {
+        id: table.id || uuidv4(), // Generate a new ID if none exists
+        name: table.name.trim(),
+        items: table.items.filter(item => typeof item === 'string' && item.trim() !== '')
+      };
+    });
+    
+    return { 
+      success: true, 
+      tables: validatedTables 
+    };
+  } catch (error) {
+    console.error('Error parsing JSON tables:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+};
+
+// Check for duplicate table names
+export const findDuplicateTableNames = (existingTables, newTables) => {
+  const duplicates = [];
+  
+  newTables.forEach(newTable => {
+    const isDuplicate = existingTables.some(existingTable => 
+      existingTable.name.trim() === newTable.name.trim()
+    );
+    
+    if (isDuplicate) {
+      duplicates.push(newTable.name);
+    }
+  });
+  
+  return duplicates;
 };

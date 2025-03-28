@@ -10,7 +10,8 @@ const TableEditorWithPreview = ({
   onTextChange,
   tableName,
   onTableNameChange,
-  placeholder,
+  contentPlaceholder,
+  namePlaceholder,
   className = '',
   preferences = {}
 }) => {
@@ -27,9 +28,10 @@ const TableEditorWithPreview = ({
         <TableEditor
           text={text}
           onTextChange={onTextChange}
-          placeholder={placeholder}
+          placeholder={contentPlaceholder}
           tableName={tableName}
           onTableNameChange={onTableNameChange}
+          namePlaceholder={namePlaceholder}
         />
       </div>
       

@@ -29,7 +29,9 @@ export const TEXT = {
     errors: {
       nameRequired: 'Table name is required',
       itemsRequired: 'At least one item is required',
-      duplicateName: 'A table with this name already exists. Please use a different name or add tags/folders to make it unique.'
+      duplicateName: 'A table with this name already exists. Please use a different name or add tags/folders to make it unique.',
+      invalidJson: 'Invalid JSON format. Please check your file and try again.',
+      duplicatesInFile: 'Duplicate table names found in import file and removed:'
     },
     success: {
       created: 'Created a new table with {count} items:',
@@ -40,6 +42,25 @@ export const TEXT = {
       folders: 'Use folder\\table_name format to organize tables in folders',
       tags: 'Use #tag or [tag] in table name to add tags for filtering',
       example: 'Example: "Dungeons\\Traps #combat [hazard]"'
+    },
+    jsonImport: {
+      title: 'Import JSON Tables',
+      fileInputLabel: 'Select JSON file',
+      dragDropText: 'To import tables: Drag & drop a JSON file here, or click to select.',
+      dragDropText2: 'This will add to (or optionally overwrite) to your existing tables.',
+      previewTitle: 'Tables to Import',
+      itemCount: '{count} items',
+      duplicatesFound: 'Duplicate tables found',
+      overrideLabel: 'Override',
+      toggleAllLabel: 'Toggle All',
+      importSelectedButton: 'Import Selected',
+      cancelButton: 'Cancel'
+    },
+    exportJson: {
+      button: 'Export Tables',
+      allTablesTitle: 'Export All Tables',
+      selectedTablesTitle: 'Export Selected Tables',
+      filename: 'random-tables.json'
     }
   },
   edit: {
@@ -94,5 +115,40 @@ export const TEXT = {
     confirmButton: 'Reset All Data',
     cancelButton: 'Cancel',
     confirmText: 'DELETE ALL DATA'
+  },
+  options: {
+    title: 'Options',
+    backButton: '← Back',
+    sections: {
+      importExport: {
+        title: 'Import & Export',
+        export: {
+          title: 'Export Tables',
+          description: 'Export all your tables to a JSON file for backup or sharing.',
+          button: 'Export Tables'
+        }
+      },
+      dataManagement: {
+        title: 'Data Management',
+        resetAllData: {
+          title: 'Reset All Data',
+          description: 'Delete all tables and roll history. This action cannot be undone.',
+          button: 'Reset All Data',
+          prompt: {
+            title: 'Reset All Data',
+            warning: '⚠️ WARNING: This will delete ALL tables and roll history!',
+            confirmMessage: 'Only the default table will remain. This action cannot be undone.',
+            typeInstruction: 'Type "DELETE ALL DATA" to confirm:',
+            confirmButton: 'Reset All Data',
+            cancelButton: 'Cancel',
+            confirmText: 'DELETE ALL DATA'
+          }
+        }
+      },
+      artCredits: {
+        title: 'Art Credits'
+      }
+    },
+    importSuccess: 'Successfully imported {count} tables'
   }
 };

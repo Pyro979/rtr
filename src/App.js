@@ -21,7 +21,8 @@ const App = () => {
     handleResetHistory,
     handleResetAllHistory,
     rollStyle,
-    rollHistory
+    rollHistory,
+    handleBulkImport
   } = useTableState();
 
   // Log state changes for debugging
@@ -34,6 +35,14 @@ const App = () => {
     handleImport(newTable);
     // Force sidebar to re-render by changing its key
     setSidebarKey(prevKey => prevKey + 1);
+  };
+
+  // Custom bulk import handler that triggers sidebar refresh
+  const handleBulkImportWithRefresh = (tables, overrideOptions = {}) => {
+    const count = handleBulkImport(tables, overrideOptions);
+    // Force sidebar to re-render after all imports
+    setSidebarKey(prevKey => prevKey + 1);
+    return count;
   };
 
   const Layout = ({ children }) => (
@@ -100,7 +109,7 @@ const App = () => {
     },
     {
       path: "/options",
-      element: <Layout><OptionsPage onResetAllHistory={handleResetAllHistory} /></Layout>,
+      element: <Layout><OptionsPage onResetAllHistory={handleResetAllHistory} onImport={handleImportWithRefresh} onBulkImport={handleBulkImportWithRefresh} /></Layout>,
       errorElement: <Layout><ErrorBoundary /></Layout>
     }
   ]);
