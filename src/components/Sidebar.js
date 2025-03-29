@@ -101,67 +101,73 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
         className="hamburger-menu"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle menu"
+        data-testid="hamburger-menu-button"
       >
         <span></span>
         <span></span>
         <span></span>
       </button>
 
-      <div className={`sidebar ${isOpen ? 'open' : ''}`}>
-        <Link to="/" className="sidebar-header" onClick={handleClose}>
-          <h2>{TEXT.sidebar.title}</h2>
+      <div className={`sidebar ${isOpen ? 'open' : ''}`} data-testid="sidebar">
+        <Link to="/" className="sidebar-header" onClick={handleClose} data-testid="sidebar-header">
+          <h2 data-testid="sidebar-title">{TEXT.sidebar.title}</h2>
         </Link>
-        <IconButton to="/import" text={<><i className="fas fa-plus"></i> {TEXT.sidebar.importButton}</>} onClick={handleClose} />
+        <IconButton to="/import" text={<><i className="fas fa-plus"></i> {TEXT.sidebar.importButton}</>} onClick={handleClose} data-testid="import-button" />
         <div className="sidebar-spacer"></div>
         <IconButton 
           to="/options" 
           text={<><i className="fas fa-cog"></i> {TEXT.sidebar.optionsButton}</>} 
           onClick={handleClose}
           className="options-button"
+          data-testid="options-button"
         />
                 
-        <div className="sidebar-search">
+        <div className="sidebar-search" data-testid="sidebar-search">
           <input
             type="text"
             placeholder={TEXT.search.placeholder}
             value={searchTerm}
             onChange={handleSearchChange}
             aria-label={TEXT.search.placeholder}
+            data-testid="sidebar-search-input"
           />
           {searchTerm && (
             <button 
               className="clear-search" 
               onClick={clearSearch}
               aria-label={TEXT.search.clearAriaLabel}
+              data-testid="clear-search-button"
             >
               <i className="fas fa-times"></i>
             </button>
           )}
         </div>
-        <TableList tables={currentTables} onLinkClick={handleClose} searchTerm={searchTerm} />
+        <TableList tables={currentTables} onLinkClick={handleClose} searchTerm={searchTerm} data-testid="table-list" />
         
         {showResetPrompt && (
-          <div className="reset-prompt-overlay">
-            <div className="reset-prompt">
-              <h3>{TEXT.resetData.title}</h3>
-              <p><i className="fas fa-exclamation-triangle"></i> {TEXT.resetData.warning}</p>
-              <p>{TEXT.resetData.confirmMessage}</p>
-              <p>{TEXT.resetData.typeInstruction}</p>
+          <div className="reset-prompt-overlay" data-testid="reset-prompt-overlay">
+            <div className="reset-prompt" data-testid="reset-prompt">
+              <h3 data-testid="reset-prompt-title">{TEXT.resetData.title}</h3>
+              <p data-testid="reset-prompt-warning"><i className="fas fa-exclamation-triangle"></i> {TEXT.resetData.warning}</p>
+              <p data-testid="reset-prompt-confirm-message">{TEXT.resetData.confirmMessage}</p>
+              <p data-testid="reset-prompt-type-instruction">{TEXT.resetData.typeInstruction}</p>
               <input 
                 type="text" 
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
                 placeholder={TEXT.resetData.confirmText}
+                data-testid="reset-prompt-input"
               />
-              <div className="reset-prompt-buttons">
+              <div className="reset-prompt-buttons" data-testid="reset-prompt-buttons">
                 <button 
                   onClick={handleConfirmReset}
                   disabled={confirmText !== TEXT.resetData.confirmText}
                   className={confirmText === TEXT.resetData.confirmText ? 'confirm-button' : 'disabled-button'}
+                  data-testid="reset-prompt-confirm-button"
                 >
                   {TEXT.resetData.confirmButton}
                 </button>
-                <button onClick={handleCancelReset}>
+                <button onClick={handleCancelReset} data-testid="reset-prompt-cancel-button">
                   {TEXT.resetData.cancelButton}
                 </button>
               </div>
@@ -174,6 +180,7 @@ const Sidebar = ({ tables = [], onResetAllHistory }) => {
         <div 
           className="sidebar-overlay"
           onClick={handleClose}
+          data-testid="sidebar-overlay"
         />
       )}
     </>

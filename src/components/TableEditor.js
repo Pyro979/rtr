@@ -18,6 +18,7 @@ const TableEditor = ({ text, placeholder, onTextChange, tableName = '', onTableN
           onChange={handleNameChange}
           placeholder={namePlaceholder}
           className="table-name-input"
+          data-testid="table-name-input"
           maxLength={100} // Prevent extremely long names
         />
       </div>
@@ -25,6 +26,7 @@ const TableEditor = ({ text, placeholder, onTextChange, tableName = '', onTableN
         value={text}
         placeholder={placeholder}
         onChange={(e) => onTextChange(e.target.value)}
+        data-testid="table-content-textarea"
       />
     </div>
   );

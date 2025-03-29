@@ -105,60 +105,69 @@ const ImportMode = ({ onImport }) => {
   };
 
   return (
-    <div className="import-mode">
-      <h2 className="page-title">{TEXT.import.title}</h2>
+    <div className="import-mode" data-testid="import-mode">
+      <h2 className="page-title" data-testid="import-title">{TEXT.import.title}</h2>
       {importSuccess && (
-        <div className="import-success">
+        <div className="import-success" data-testid="import-success">
           <div className="success-message">
             Created a new table with {importSuccess.itemCount} items: 
-            <Link to={`/table/${importSuccess.id}/roll`} className="table-link">
+            <Link to={`/table/${importSuccess.id}/roll`} className="table-link" data-testid="imported-table-link">
               {importSuccess.name}
             </Link>
           </div>
           <button 
             className="action-button secondary-button clear-button"
             onClick={() => setImportSuccess(null)}
+            data-testid="clear-success-button"
           >
             {TEXT.import.success.clearButton}
           </button>
         </div>
       )}
       
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="error-message" data-testid="import-error">
+          <i className="fas fa-exclamation-circle"></i> {error}
+        </div>
+      )}
       
       <div className="import-preferences">
         <div className="preferences-options">
-          <label className="preference-item">
+          <label className="preference-item" data-testid="remove-numbers-label">
             <input
               type="checkbox"
               checked={preferences.removeLeadingNumbers}
               onChange={(e) => updatePreference('removeLeadingNumbers', e.target.checked)}
+              data-testid="remove-numbers-checkbox"
             />
             {TEXT.import.preferences.removeLeadingNumbers}
           </label>
-          <label className="preference-item">
+          <label className="preference-item" data-testid="remove-bullets-label">
             <input
               type="checkbox"
               checked={preferences.removeBulletPoints}
               onChange={(e) => updatePreference('removeBulletPoints', e.target.checked)}
+              data-testid="remove-bullets-checkbox"
             />
             {TEXT.import.preferences.removeBulletPoints}
           </label>
-          <label className="preference-item">
+          <label className="preference-item" data-testid="remove-duplicates-label">
             <input
               type="checkbox"
               checked={preferences.removeDuplicates}
               onChange={(e) => updatePreference('removeDuplicates', e.target.checked)}
+              data-testid="remove-duplicates-checkbox"
             />
             {duplicateCount > 0 
               ? TEXT.import.preferences.removeDuplicatesCount.replace('{count}', duplicateCount)
               : TEXT.import.preferences.removeDuplicates}
           </label>
-          <label className="preference-item">
+          <label className="preference-item" data-testid="remove-header-label">
             <input
               type="checkbox"
               checked={preferences.removeHeader}
               onChange={(e) => updatePreference('removeHeader', e.target.checked)}
+              data-testid="remove-header-checkbox"
             />
             {TEXT.import.preferences.removeHeader}
             {preferences.removeHeader && headerText && (
@@ -170,6 +179,7 @@ const ImportMode = ({ onImport }) => {
           onClick={handleImport}
           className="action-button primary-button"
           disabled={!tableName.trim() || importText.trim() === ''}
+          data-testid="import-button"
         >
           {TEXT.import.submitButton}
         </button>
@@ -207,9 +217,10 @@ const ImportMode = ({ onImport }) => {
         namePlaceholder={TEXT.import.namePlaceholder}
         contentPlaceholder={TEXT.import.contentPlaceholder}
         preferences={preferences}
+        data-testid="table-preview"
       />
       
-      <div className="organization-tips">
+      <div className="organization-tips" data-testid="organization-tips">
         <h3>{TEXT.import.organization.title}</h3>
         <ul>
           <li><i className="fas fa-folder"></i> {TEXT.import.organization.folders}</li>

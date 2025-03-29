@@ -262,6 +262,8 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
           onClick={onLinkClick}
           title={table.name}
           style={{ paddingLeft: `${level * 16}px` }}
+          data-testid={`table-link-${table.id}`}
+          data-table-id={table.id}
         >
           <div className="table-info">
             <pre className="table-index">[{paddedCount}]</pre>

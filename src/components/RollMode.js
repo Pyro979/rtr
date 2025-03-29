@@ -61,10 +61,12 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     if (highlightedRowRef.current && tableContainerRef.current) {
       // Use a small timeout to ensure the DOM has updated
       setTimeout(() => {
-        highlightedRowRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
+        if (highlightedRowRef.current) {
+          highlightedRowRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
       }, 100);
     }
   }, [rolledIndex]);
@@ -157,30 +159,32 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   }, [currentRoll]);
 
   return (
-    <div className="roll-mode">
-      <h2>{TEXT.roll.title}</h2>
-      <div className="roll-controls">
+    <div className="roll-mode" data-testid="roll-mode">
+      <h2 data-testid="roll-table-title">{TEXT.roll.title}</h2>
+      <div className="roll-controls" data-testid="roll-controls">
         <select 
           value={currentRollStyle} 
           onChange={(e) => handleStyleChange(e.target.value)}
+          data-testid="roll-style-select"
         >
-          <option value="normal">{TEXT.roll.styles.normal}</option>
-          <option value="weighted">{TEXT.roll.styles.weighted}</option>
-          <option value="noRepeat">{TEXT.roll.styles.noRepeat}</option>
+          <option value="normal" data-testid="roll-style-normal">{TEXT.roll.styles.normal}</option>
+          <option value="weighted" data-testid="roll-style-weighted">{TEXT.roll.styles.weighted}</option>
+          <option value="noRepeat" data-testid="roll-style-no-repeat">{TEXT.roll.styles.noRepeat}</option>
         </select>
-        <button onClick={handleResetHistory}>
+        <button onClick={handleResetHistory} data-testid="reset-history-button">
           <i className="fas fa-history"></i> {TEXT.roll.resetButton}
         </button>
       </div>
       
       {currentRoll && (
-        <div className="roll-result">
+        <div className="roll-result" data-testid="roll-result">
           <div className="result-container">
             <p>{TEXT.roll.rolledPrefix} {currentRoll}</p>
             <button 
               className="copy-button" 
               onClick={handleCopyResult} 
               title={TEXT.roll.copyTooltip}
+              data-testid="copy-button"
             >
               <i className="fas fa-copy"></i>
             </button>
@@ -188,7 +192,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         </div>
       )}
       
-      <div className="roll-table" ref={tableContainerRef}>
+      <div className="roll-table" ref={tableContainerRef} data-testid="roll-table-container">
         <table>
           <tbody>
             {table.items.map((item, index) => {
@@ -204,13 +208,14 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
                     ${isRolled ? 'rolled' : ''}
                   `}
                   ref={isHighlighted ? highlightedRowRef : null}
+                  data-testid={`roll-table-row-${index}`}
                 >
-                  <td>{index + 1}</td>
+                  <td data-testid={`roll-table-item-${index}`}>{index + 1}</td>
                   <td>
                     {item}
                     {/* Only show counts for weighted mode */}
                     {currentRollStyle === 'weighted' && count > 0 && (
-                      <span className="roll-count">
+                      <span className="roll-count" data-testid={`roll-count-${index}`}>
                         ({count} {count === 1 ? TEXT.roll.rollCount.singular : TEXT.roll.rollCount.plural})
                       </span>
                     )}
@@ -228,6 +233,7 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         onClick={handleRoll}
         disabled={isRolling || allItemsRolled}
         aria-label="Roll on table"
+        data-testid="floating-roll-button"
       >
         <img src={process.env.PUBLIC_URL + "/logo.svg"} alt="d20 dice" className="roll-icon-svg" />
         <span className="roll-text">{allItemsRolled ? TEXT.roll.floatingButton.done : TEXT.roll.floatingButton.roll}</span>

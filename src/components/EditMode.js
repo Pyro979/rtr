@@ -105,24 +105,28 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
   };
 
   return (
-    <div className="edit-mode">
+    <div className="edit-mode" data-testid="edit-mode">
+      <h2 data-testid="edit-table-title">{TEXT.edit.title}</h2>
       <div className="edit-actions">
         <button 
           onClick={handleSave}
           className="action-button primary-button"
           disabled={!hasChanges}
+          data-testid="save-changes-button"
         >
           {TEXT.edit.saveButton}
         </button>
         <button 
           onClick={handleDuplicate}
           className="action-button duplicate-button"
+          data-testid="duplicate-button"
         >
           {TEXT.edit.duplicateButton}
         </button>
         <button 
           onClick={handleDelete}
           className="action-button danger-button"
+          data-testid="delete-button"
         >
           {TEXT.edit.deleteButton}
         </button>
@@ -134,9 +138,10 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
         tableName={editedName}
         onTableNameChange={handleNameChange}
         placeholder={TEXT.edit.contentPlaceholder}
+        data-testid="table-editor"
       />
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="error-message" data-testid="error-message">{error}</div>}
     </div>
   );
 };
