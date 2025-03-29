@@ -180,6 +180,9 @@ test.describe('Table Rolling Functionality', () => {
     // Verify a roll result is displayed
     await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
     
+    // Take a screenshot of the roll result
+    await page.screenshot({ path: 'test-results/roll-result.png' });
+    
     // Verify a row is highlighted
     const highlightedBefore = page.locator('tr[class*="highlighted"]');
     await expect(highlightedBefore).toBeVisible();
@@ -203,6 +206,9 @@ test.describe('Table Rolling Functionality', () => {
       const rollStyleAfter = await page.locator('[data-testid="roll-style-select"]').inputValue();
       console.log('Roll style after navigation:', rollStyleAfter);
       expect(rollStyleAfter).toBe('weighted');
+      
+      // Take a screenshot after navigation
+      await page.screenshot({ path: 'test-results/roll-after-navigation.png' });
       
       // Check if roll result is displayed after navigation (without rolling again)
       const resultVisible = await page.locator('[data-testid="roll-result"]').isVisible();
@@ -231,6 +237,9 @@ test.describe('Table Rolling Functionality', () => {
       // Verify we're in edit mode by checking for the table name input field
       await expect(page.locator('[data-testid="table-name-input"]')).toBeVisible();
       
+      // Take a screenshot in edit mode
+      await page.screenshot({ path: 'test-results/edit-mode.png' });
+      
       // Navigate away
       await page.goto('/#/');
       await page.waitForTimeout(1000);
@@ -241,6 +250,9 @@ test.describe('Table Rolling Functionality', () => {
       
       // Verify we're redirected to roll mode (the default mode)
       await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
+      
+      // Take a screenshot after returning to roll mode
+      await page.screenshot({ path: 'test-results/default-roll-mode.png' });
     }
   });
 });

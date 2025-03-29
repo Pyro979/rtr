@@ -16,11 +16,17 @@ test.describe('Table Import Functionality', () => {
     // Fill in the table items
     await page.locator('[data-testid="table-content-textarea"]').fill('Item 1\nItem 2\nItem 3');
     
+    // Take a screenshot before import
+    await page.screenshot({ path: 'test-results/before-import.png' });
+    
     // Click the import button
     await page.locator('[data-testid="import-button"]').click();
     
     // Verify success message appears
     await expect(page.locator('[data-testid="import-success"]')).toBeVisible();
+    
+    // Take a screenshot after import
+    await page.screenshot({ path: 'test-results/after-import.png' });
     
     // Verify the table appears in the sidebar
     // First check if we need to open the sidebar
@@ -29,6 +35,9 @@ test.describe('Table Import Functionality', () => {
       await sidebarButton.click();
       await page.waitForTimeout(500);
     }
+    
+    // Take a screenshot of the sidebar with the imported table
+    await page.screenshot({ path: 'test-results/sidebar-with-imported-table.png' });
     
     // Check for the table in the sidebar using data-testid
     await expect(page.locator('[data-testid^="table-link-"]')).toBeVisible();
