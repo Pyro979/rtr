@@ -27,7 +27,14 @@
     "package": "npm run build:itch && node scripts/package.js",
     "publish": "npm run build:itch && node scripts/publish.js",
     "deploy:github": "npm run build:github && gh-pages -d build",
-    "deploy:all": "node scripts/publish-all.js"
+    "deploy:all": "node scripts/publish-all.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:basic": "playwright test tests/basic.spec.js --debug",
+    "test:e2e:simple": "playwright test tests/simple.spec.js --debug",
+    "test:e2e:install": "npx playwright install",
+    "test:e2e:headed": "playwright test --headed"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.1",
     "archiver": "^7.0.1",
     "cross-env": "^7.0.3",
     "gh-pages": "^4.0.0"
