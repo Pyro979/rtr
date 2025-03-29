@@ -3,7 +3,18 @@ import { useParams, Link, Navigate, useLocation } from 'react-router-dom';
 import EditMode from '../components/EditMode';
 import RollMode from '../components/RollMode';
 
-const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll, onResetHistory, rollStyle, rollHistory }) => {
+const TableRoute = ({ 
+  tables, 
+  onUpdateTable, 
+  onDeleteTable, 
+  onDuplicate, 
+  onRoll, 
+  onResetHistory, 
+  rollStyle, 
+  rollHistory,
+  tableModes,
+  onUpdateTableMode 
+}) => {
   const { tableId } = useParams();
   const location = useLocation();
   const isEditMode = location.pathname.endsWith('/edit');
@@ -18,6 +29,13 @@ const TableRoute = ({ tables, onUpdateTable, onDeleteTable, onDuplicate, onRoll,
       setCurrentTableName(table.name);
     }
   }, [table]);
+  
+  // Update the table mode whenever it changes
+  useEffect(() => {
+    if (tableId && onUpdateTableMode) {
+      onUpdateTableMode(tableId, isEditMode ? 'edit' : 'roll');
+    }
+  }, [tableId, isEditMode, onUpdateTableMode]);
   
   // Custom update handler to update the name immediately
   const handleUpdateTable = (updatedTable) => {

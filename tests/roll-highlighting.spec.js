@@ -41,7 +41,7 @@ test.describe('Roll Highlighting Functionality', () => {
     const rolledItem = rolledText.replace(/Rolled:|\s+/g, ' ').trim();
     
     // Verify the corresponding row in the table is highlighted
-    const highlightedRow = page.locator('tr.highlighted');
+    const highlightedRow = page.locator('tr[class*="highlighted"]');
     await expect(highlightedRow).toBeVisible();
     
     // Verify the highlighted row contains the rolled item text
@@ -60,7 +60,8 @@ test.describe('Roll Highlighting Functionality', () => {
     const rolledItem1 = rolledText1.replace(/Rolled:|\s+/g, ' ').trim();
     
     // Verify the first item is highlighted
-    await expect(page.locator('tr.highlighted')).toContainText(rolledItem1);
+    const highlightedRow1 = page.locator('tr[class*="highlighted"]');
+    await expect(highlightedRow1).toContainText(rolledItem1);
     
     // Roll again
     await page.locator('[data-testid="floating-roll-button"]').click();
@@ -70,7 +71,8 @@ test.describe('Roll Highlighting Functionality', () => {
     const rolledItem2 = rolledText2.replace(/Rolled:|\s+/g, ' ').trim();
     
     // Verify the second item is now highlighted
-    await expect(page.locator('tr.highlighted')).toContainText(rolledItem2);
+    const highlightedRow2 = page.locator('tr[class*="highlighted"]');
+    await expect(highlightedRow2).toContainText(rolledItem2);
     
     // If the items are different, verify the first is no longer highlighted
     if (rolledItem1 !== rolledItem2) {

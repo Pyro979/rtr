@@ -22,6 +22,8 @@ const App = () => {
     handleResetAllHistory,
     rollStyle,
     rollHistory,
+    tableModes,
+    handleUpdateTableMode,
     handleBulkImport
   } = useTableState();
 
@@ -84,6 +86,8 @@ const App = () => {
             onResetHistory={handleResetHistory}
             rollStyle={rollStyle}
             rollHistory={rollHistory}
+            tableModes={tableModes}
+            onUpdateTableMode={handleUpdateTableMode}
           />
         </Layout>
       ),
@@ -102,6 +106,8 @@ const App = () => {
             onResetHistory={handleResetHistory}
             rollStyle={rollStyle}
             rollHistory={rollHistory}
+            tableModes={tableModes}
+            onUpdateTableMode={handleUpdateTableMode}
           />
         </Layout>
       ),

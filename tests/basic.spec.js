@@ -13,7 +13,7 @@ test.describe('Basic Functionality Tests', () => {
     await expect(appTitle).toBeVisible();
     
     // Take a screenshot for debugging
-    await page.screenshot({ path: 'test-results/homepage.png' });
+    await page.screenshot({ path: 'test-results/test-results/homepage.png' });
   });
 
   test('should navigate to import page directly', async ({ page }) => {
@@ -28,7 +28,7 @@ test.describe('Basic Functionality Tests', () => {
     await expect(importTitle).toBeVisible();
     
     // Take a screenshot for debugging
-    await page.screenshot({ path: 'test-results/import-page.png' });
+    await page.screenshot({ path: 'test-results/test-results/import-page.png' });
   });
   
   test('should be able to fill import form', async ({ page }) => {
@@ -53,6 +53,6 @@ test.describe('Basic Functionality Tests', () => {
     await expect(importButton).toBeVisible();
     
     // Take a screenshot of the filled form
-    await page.screenshot({ path: 'test-results/filled-form.png' });
+    await page.screenshot({ path: 'test-results/test-results/filled-form.png' });
   });
 });

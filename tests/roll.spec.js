@@ -77,6 +77,42 @@ test.describe('Table Rolling Functionality', () => {
     await expect(highlightedItem).toBeVisible();
   });
 
+  test('should maintain roll history between component renders', async ({ page }) => {
+    // Roll multiple times
+    await page.locator('[data-testid="floating-roll-button"]').click();
+    await page.waitForTimeout(300);
+    await page.locator('[data-testid="floating-roll-button"]').click();
+    await page.waitForTimeout(300);
+    
+    // Navigate away and back to test state persistence
+    // First get the current URL which contains the table ID
+    const currentUrl = page.url();
+    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
+    
+    if (tableIdMatch && tableIdMatch[1]) {
+      const tableId = tableIdMatch[1];
+      
+      // Navigate to home page
+      await page.goto('/#/');
+      await page.waitForTimeout(1000);
+      
+      // Navigate back to the roll page
+      await page.goto(`/#/table/${tableId}/roll`);
+      await page.waitForTimeout(1000);
+      
+      // Roll again after returning to ensure we have a result
+      await page.locator('[data-testid="floating-roll-button"]').click();
+      await page.waitForTimeout(500);
+      
+      // Verify a roll result is displayed
+      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+      
+      // Verify that a row is highlighted after the new roll
+      const highlightedItem = page.locator('tr.highlighted');
+      await expect(highlightedItem).toBeVisible();
+    }
+  });
+
   test('should change roll styles', async ({ page }) => {
     // Verify we're on the roll page
     await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
@@ -131,5 +167,80 @@ test.describe('Table Rolling Functionality', () => {
     // Verify the table name is correct
     const tableName = await page.locator('[data-testid="table-name-input"]').inputValue();
     expect(tableName).toEqual('Test Roll Table');
+  });
+
+  test('should verify roll state persistence', async ({ page }) => {
+    // Change to weighted mode
+    await page.locator('[data-testid="roll-style-select"]').selectOption('weighted');
+    
+    // Roll on the table
+    await page.locator('[data-testid="floating-roll-button"]').click();
+    await page.waitForTimeout(500);
+    
+    // Verify a roll result is displayed
+    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+    
+    // Verify a row is highlighted
+    const highlightedBefore = page.locator('tr[class*="highlighted"]');
+    await expect(highlightedBefore).toBeVisible();
+    
+    // Get the current URL which contains the table ID
+    const currentUrl = page.url();
+    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
+    
+    if (tableIdMatch && tableIdMatch[1]) {
+      const tableId = tableIdMatch[1];
+      
+      // Navigate away
+      await page.goto('/#/');
+      await page.waitForTimeout(1000);
+      
+      // Navigate back to the roll page
+      await page.goto(`/#/table/${tableId}/roll`);
+      await page.waitForTimeout(1000);
+      
+      // Check if roll style is preserved (should be 'weighted')
+      const rollStyleAfter = await page.locator('[data-testid="roll-style-select"]').inputValue();
+      console.log('Roll style after navigation:', rollStyleAfter);
+      expect(rollStyleAfter).toBe('weighted');
+      
+      // Check if roll result is displayed after navigation (without rolling again)
+      const resultVisible = await page.locator('[data-testid="roll-result"]').isVisible();
+      console.log('Roll result visible after navigation:', resultVisible);
+      expect(resultVisible).toBeTruthy();
+      
+      // Check if highlighting is preserved - use a more robust selector
+      const highlightedAfter = await page.locator('tr[class*="highlighted"]').count();
+      console.log('Highlighted rows after navigation:', highlightedAfter);
+      expect(highlightedAfter).toBeGreaterThan(0);
+    }
+  });
+
+  test('should always default to roll mode when returning to a table', async ({ page }) => {
+    // Get the current URL which contains the table ID
+    const currentUrl = page.url();
+    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
+    
+    if (tableIdMatch && tableIdMatch[1]) {
+      const tableId = tableIdMatch[1];
+      
+      // Switch to edit mode
+      await page.locator('[data-testid="edit-table-link"]').click();
+      await page.waitForTimeout(1000);
+      
+      // Verify we're in edit mode by checking for the table name input field
+      await expect(page.locator('[data-testid="table-name-input"]')).toBeVisible();
+      
+      // Navigate away
+      await page.goto('/#/');
+      await page.waitForTimeout(1000);
+      
+      // Navigate back to the table without specifying mode
+      await page.goto(`/#/table/${tableId}`);
+      await page.waitForTimeout(1000);
+      
+      // Verify we're redirected to roll mode (the default mode)
+      await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
+    }
   });
 });

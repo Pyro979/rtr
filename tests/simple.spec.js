@@ -10,13 +10,13 @@ test('basic app functionality', async ({ page }) => {
   await page.waitForTimeout(3000);
   
   // Take a screenshot to see what's rendered
-  await page.screenshot({ path: 'homepage.png' });
+  await page.screenshot({ path: 'test-results/homepage.png' });
   
   // Try to navigate directly to the import page using hash routing
   console.log('Navigating directly to import page...');
   await page.goto('/#/import');
   await page.waitForTimeout(2000);
-  await page.screenshot({ path: 'import-page.png' });
+  await page.screenshot({ path: 'test-results/import-page.png' });
   
   // Find the input field and fill it using data-testid
   console.log('Looking for input field by data-testid...');
@@ -79,12 +79,12 @@ test('basic app functionality', async ({ page }) => {
   await page.waitForTimeout(2000);
   
   // Take a screenshot after import
-  await page.screenshot({ path: 'after-import.png' });
+  await page.screenshot({ path: 'test-results/after-import.png' });
   
   console.log('Import completed, navigating to home...');
   await page.goto('/');
   await page.waitForTimeout(2000);
-  await page.screenshot({ path: 'home-after-import.png' });
+  await page.screenshot({ path: 'test-results/home-after-import.png' });
   
   console.log('Test completed successfully!');
 });

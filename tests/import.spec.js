@@ -30,8 +30,23 @@ test.describe('Table Import Functionality', () => {
       await page.waitForTimeout(500);
     }
     
-    // Check for the table in the sidebar
-    await expect(page.getByText('Test Import Table')).toBeVisible();
+    // Check for the table in the sidebar using data-testid
+    await expect(page.locator('[data-testid^="table-link-"]')).toBeVisible();
+    
+    // Verify at least one table link contains our table name
+    const tableLinks = page.locator('[data-testid^="table-link-"]');
+    const count = await tableLinks.count();
+    let foundTable = false;
+    
+    for (let i = 0; i < count; i++) {
+      const text = await tableLinks.nth(i).textContent();
+      if (text.includes('Test Import Table')) {
+        foundTable = true;
+        break;
+      }
+    }
+    
+    expect(foundTable).toBeTruthy();
   });
 
   test('should prevent duplicate table names', async ({ page }) => {

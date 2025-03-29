@@ -4,6 +4,7 @@ import { loadTables, saveTables } from '../utils/tableUtils';
 
 const STORAGE_KEY = 'randomTables';
 const ROLL_HISTORY_KEY = 'rollHistory';
+const TABLE_MODES_KEY = 'tableModes';
 
 const DEFAULT_ENEMIES_TABLE = {
   id: uuidv4(),
@@ -104,7 +105,22 @@ export const useTableState = () => {
     return JSON.parse(storedTables);
   });
   
-  const [rollStyle, setRollStyle] = useState('normal');
+  // Initialize roll style from localStorage
+  const [rollStyle, setRollStyle] = useState(() => {
+    const storedHistory = localStorage.getItem(ROLL_HISTORY_KEY);
+    if (storedHistory) {
+      const history = JSON.parse(storedHistory);
+      // Look for the most recently used style in any table's history
+      for (const tableId in history) {
+        if (history[tableId] && history[tableId].style) {
+          console.log('Initializing roll style from history:', history[tableId].style);
+          return history[tableId].style;
+        }
+      }
+    }
+    console.log('Initializing default roll style: normal');
+    return 'normal';
+  });
   
   // Initialize roll history from localStorage
   const [rollHistory, setRollHistory] = useState(() => {
@@ -114,6 +130,17 @@ export const useTableState = () => {
       return JSON.parse(storedHistory);
     }
     console.log('Initializing empty roll history');
+    return {};
+  });
+  
+  // Initialize table modes from localStorage
+  const [tableModes, setTableModes] = useState(() => {
+    const storedModes = localStorage.getItem(TABLE_MODES_KEY);
+    if (storedModes) {
+      console.log('Initializing table modes from localStorage:', storedModes);
+      return JSON.parse(storedModes);
+    }
+    console.log('Initializing empty table modes');
     return {};
   });
 
@@ -128,6 +155,12 @@ export const useTableState = () => {
     console.log('Saving roll history to localStorage:', rollHistory);
     localStorage.setItem(ROLL_HISTORY_KEY, JSON.stringify(rollHistory));
   }, [rollHistory]);
+  
+  // Save table modes to localStorage whenever they change
+  useEffect(() => {
+    console.log('Saving table modes to localStorage:', tableModes);
+    localStorage.setItem(TABLE_MODES_KEY, JSON.stringify(tableModes));
+  }, [tableModes]);
 
   const handleImport = (newTable) => {
     console.log('Importing table:', newTable);
@@ -237,28 +270,39 @@ export const useTableState = () => {
 
   const handleRoll = (tableId, index, result, style) => {
     console.log('handleRoll called with:', { tableId, index, result, style });
-    if (!tableId) {
-      // Only update roll style if no result is provided
-      if (style && style !== rollStyle) {
-        console.log('Updating roll style to:', style);
-        setRollStyle(style);
+    
+    // Update global roll style if provided
+    if (style && style !== rollStyle) {
+      console.log('Updating global roll style to:', style);
+      setRollStyle(style);
+      
+      // If no tableId is provided, just update the style and return
+      if (!tableId) {
+        return;
       }
-      return;
     }
 
     setRollHistory(prev => {
       console.log('Previous roll history:', prev);
       
+      // Get the table we're rolling on to get the actual result text
+      const tableToRoll = tables.find(t => t.id === tableId);
+      const resultText = index !== undefined && tableToRoll && tableToRoll.items && tableToRoll.items[index] 
+        ? tableToRoll.items[index] 
+        : result;
+      
       // Create a new history object with updated values
       const newHistory = {
         ...prev,
         [tableId]: {
-          result,
-          style: style || prev[tableId]?.style || 'normal',
-          counts: {
+          ...(prev[tableId] || {}),  // Preserve existing table history
+          result: resultText,  // Save the actual result text
+          style: style || prev[tableId]?.style || rollStyle,  // Use provided style, or existing style, or global style
+          counts: index !== undefined ? {
             ...(prev[tableId]?.counts || {}),
             [index]: ((prev[tableId]?.counts || {})[index] || 0) + 1
-          }
+          } : prev[tableId]?.counts || {},
+          rolledIndex: index !== undefined ? index : prev[tableId]?.rolledIndex
         }
       };
       
@@ -289,51 +333,41 @@ export const useTableState = () => {
   const handleResetAllHistory = () => {
     console.log('Resetting all roll history and tables');
     
-    // Clear all roll history
+    // Clear the roll history
     setRollHistory({});
     
-    // Reset tables to just the default tables
-    setTables([{
-      ...DEFAULT_ENEMIES_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }, {
-      ...DEFAULT_TREASURE_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }, {
-      ...DEFAULT_WEATHER_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }]);
-    
-    // Remove from localStorage
+    // Clear localStorage for roll history
     localStorage.removeItem(ROLL_HISTORY_KEY);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify([{
-      ...DEFAULT_ENEMIES_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }, {
-      ...DEFAULT_TREASURE_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }, {
-      ...DEFAULT_WEATHER_TABLE,
-      id: uuidv4() // Generate a new ID for the default table
-    }]));
+    
+    console.log('All roll history reset');
   };
 
-  // Log rollHistory changes
-  useEffect(() => {
-    console.log('Roll history updated:', rollHistory);
-    console.log('Current roll history state:', rollHistory);
-  }, [rollHistory]);
+  // Function to update the mode for a specific table
+  const handleUpdateTableMode = (tableId, mode) => {
+    if (!tableId) return;
+    
+    console.log(`Updating mode for table ${tableId} to ${mode}`);
+    setTableModes(prev => {
+      const newModes = {
+        ...prev,
+        [tableId]: mode
+      };
+      return newModes;
+    });
+  };
 
   return {
     tables,
     rollStyle,
     rollHistory,
+    tableModes,
     handleImport,
     handleBulkImport,
     handleUpdateTable,
     handleDeleteTable,
     handleRoll,
     handleResetHistory,
-    handleResetAllHistory
+    handleResetAllHistory,
+    handleUpdateTableMode
   };
 };

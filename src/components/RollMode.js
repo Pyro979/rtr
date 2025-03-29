@@ -37,6 +37,9 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       if (tableHistory.rolledIndex !== undefined) {
         setRolledIndex(tableHistory.rolledIndex);
       }
+      if (tableHistory.style) {
+        setCurrentRollStyle(tableHistory.style);
+      }
     }
   }, [table, rollHistory]);
 
@@ -116,6 +119,8 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   };
   
   const handleStyleChange = (newStyle) => {
+    console.log(`Changing roll style to: ${newStyle}`);
+    
     // Reset history when switching to any mode
     handleResetHistory();
     
