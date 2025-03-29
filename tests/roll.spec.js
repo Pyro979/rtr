@@ -255,4 +255,70 @@ test.describe('Table Rolling Functionality', () => {
       await page.screenshot({ path: 'test-results/default-roll-mode.png' });
     }
   });
+
+  test('should handle no-repeat roll mode correctly', async ({ page }) => {
+    // Change to no-repeat mode
+    await page.locator('[data-testid="roll-style-select"]').selectOption('noRepeat');
+    
+    // Take a screenshot before rolling in no-repeat mode
+    await page.screenshot({ path: 'test-results/no-repeat-mode-before.png' });
+    
+    // Roll multiple times
+    for (let i = 0; i < 3; i++) {
+      await page.locator('[data-testid="floating-roll-button"]').click();
+      await page.waitForTimeout(500);
+      
+      // Take a screenshot after each roll
+      await page.screenshot({ path: `test-results/no-repeat-roll-${i+1}.png` });
+      
+      // Verify a roll result is displayed
+      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+      
+      // Verify a row is highlighted
+      await expect(page.locator('tr[class*="highlighted"]')).toBeVisible();
+      
+      // Verify previously rolled items have the "rolled" class
+      if (i > 0) {
+        const rolledItems = page.locator('tr[class*="rolled"]');
+        const count = await rolledItems.count();
+        expect(count).toBeGreaterThanOrEqual(i);
+      }
+    }
+    
+    // Take a final screenshot showing multiple rolled items
+    await page.screenshot({ path: 'test-results/no-repeat-mode-after.png' });
+  });
+
+  test('should handle weighted roll mode correctly', async ({ page }) => {
+    // Change to weighted mode
+    await page.locator('[data-testid="roll-style-select"]').selectOption('weighted');
+    
+    // Take a screenshot before rolling in weighted mode
+    await page.screenshot({ path: 'test-results/weighted-mode-before.png' });
+    
+    // Roll multiple times
+    for (let i = 0; i < 3; i++) {
+      await page.locator('[data-testid="floating-roll-button"]').click();
+      await page.waitForTimeout(500);
+      
+      // Take a screenshot after each roll
+      await page.screenshot({ path: `test-results/weighted-roll-${i+1}.png` });
+      
+      // Verify a roll result is displayed
+      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+      
+      // Verify a row is highlighted
+      await expect(page.locator('tr[class*="highlighted"]')).toBeVisible();
+      
+      // Verify roll counts are displayed
+      if (i > 0) {
+        const rollCounts = page.locator('.roll-count');
+        const count = await rollCounts.count();
+        expect(count).toBeGreaterThan(0);
+      }
+    }
+    
+    // Take a final screenshot showing roll counts
+    await page.screenshot({ path: 'test-results/weighted-mode-after.png' });
+  });
 });
