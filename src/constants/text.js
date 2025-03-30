@@ -90,9 +90,16 @@ export const TEXT = {
       singular: 'time',
       plural: 'times'
     },
+    noRepeatCount: {
+      format: '{rolled}/{total} rolled'
+    },
     floatingButton: {
       roll: 'Roll (r)',
       done: 'Done'
+    },
+    condenseOption: {
+      label: 'Condense Duplicates',
+      tooltip: 'Show consecutive duplicate rolls as a single entry with range'
     }
   },
   errors: {

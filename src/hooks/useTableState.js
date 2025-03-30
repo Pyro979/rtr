@@ -5,6 +5,7 @@ import { loadTables, saveTables } from '../utils/tableUtils';
 const STORAGE_KEY = 'randomTables';
 const ROLL_HISTORY_KEY = 'rollHistory';
 const TABLE_MODES_KEY = 'tableModes';
+const CONDENSE_OPTIONS_KEY = 'condenseOptions';
 
 const DEFAULT_ENEMIES_TABLE = {
   id: uuidv4(),
@@ -144,6 +145,17 @@ export const useTableState = () => {
     return {};
   });
 
+  // Initialize condense options from localStorage
+  const [condenseOptions, setCondenseOptions] = useState(() => {
+    const storedOptions = localStorage.getItem(CONDENSE_OPTIONS_KEY);
+    if (storedOptions) {
+      console.log('Initializing condense options from localStorage:', storedOptions);
+      return JSON.parse(storedOptions);
+    }
+    console.log('Initializing default condense options');
+    return {}; // Default is empty object, will be populated per table
+  });
+
   // Save to localStorage whenever tables change
   useEffect(() => {
     console.log('Saving tables to localStorage:', tables);
@@ -161,6 +173,12 @@ export const useTableState = () => {
     console.log('Saving table modes to localStorage:', tableModes);
     localStorage.setItem(TABLE_MODES_KEY, JSON.stringify(tableModes));
   }, [tableModes]);
+
+  // Save condense options to localStorage whenever they change
+  useEffect(() => {
+    console.log('Saving condense options to localStorage:', condenseOptions);
+    localStorage.setItem(CONDENSE_OPTIONS_KEY, JSON.stringify(condenseOptions));
+  }, [condenseOptions]);
 
   const handleImport = (newTable) => {
     console.log('Importing table:', newTable);
@@ -356,11 +374,26 @@ export const useTableState = () => {
     });
   };
 
+  // Function to toggle condense option for a specific table
+  const handleToggleCondenseOption = (tableId, isCondensed) => {
+    if (!tableId) return;
+    
+    console.log(`Updating condense option for table ${tableId} to ${isCondensed}`);
+    setCondenseOptions(prev => {
+      const newOptions = {
+        ...prev,
+        [tableId]: isCondensed
+      };
+      return newOptions;
+    });
+  };
+
   return {
     tables,
     rollStyle,
     rollHistory,
     tableModes,
+    condenseOptions,
     handleImport,
     handleBulkImport,
     handleUpdateTable,
@@ -368,6 +401,7 @@ export const useTableState = () => {
     handleRoll,
     handleResetHistory,
     handleResetAllHistory,
-    handleUpdateTableMode
+    handleUpdateTableMode,
+    handleToggleCondenseOption
   };
 };

@@ -13,7 +13,9 @@ const TableRoute = ({
   rollStyle, 
   rollHistory,
   tableModes,
-  onUpdateTableMode 
+  onUpdateTableMode,
+  condenseOptions,
+  onToggleCondenseOption
 }) => {
   const { tableId } = useParams();
   const location = useLocation();
@@ -85,6 +87,8 @@ const TableRoute = ({
           rollHistory={rollHistory}
           onRoll={onRoll}
           onResetHistory={onResetHistory}
+          isCondensed={condenseOptions[tableId] || false}
+          onToggleCondense={(isCondensed) => onToggleCondenseOption(tableId, isCondensed)}
         />
       )}
     </div>

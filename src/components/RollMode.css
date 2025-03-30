@@ -7,9 +7,16 @@
 
 .roll-controls {
   display: flex;
-  gap: 10px;
   margin-bottom: 15px;
   align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.roll-controls-group {
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .roll-controls button, .roll-controls select {
@@ -19,6 +26,7 @@
   background-color: #f5f5f5;
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-right: 10px;
 }
 
 .roll-controls button:hover, .roll-controls select:hover {
@@ -48,6 +56,36 @@
   margin: 0;
   font-size: 18px;
   color: #333;
+}
+
+/* Roll progress bar for No Repeat mode */
+.roll-progress {
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+  border-left: 4px solid #4caf50;
+}
+
+.roll-progress-text {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #333;
+}
+
+.roll-progress-bar {
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.roll-progress-fill {
+  height: 100%;
+  background-color: #4caf50;
+  border-radius: 4px;
+  transition: width 0.3s ease;
 }
 
 .copy-button {
@@ -131,7 +169,14 @@
   font-style: italic;
 }
 
-.roll-table tr.rolled.highlighted td:nth-child(2) {
+.roll-table td.rolled-text {
+  text-decoration: line-through;
+  color: #999;
+  font-style: italic;
+}
+
+.roll-table tr.rolled.highlighted td:nth-child(2),
+.roll-table tr.highlighted td.rolled-text {
   text-decoration: line-through;
   color: #2196f3;
 }
@@ -204,13 +249,27 @@ button.disabled {
 }
 
 .roll-icon-svg {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   margin-bottom: 5px;
 }
 
 .roll-text {
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Condense option styling */
+.condense-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
-  color: #333;
+  color: #666;
+  white-space: nowrap;
+}
+
+.condense-option input[type="checkbox"] {
+  margin-right: 6px;
+  cursor: pointer;
 }

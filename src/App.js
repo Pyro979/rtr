@@ -24,6 +24,8 @@ const App = () => {
     rollHistory,
     tableModes,
     handleUpdateTableMode,
+    condenseOptions,
+    handleToggleCondenseOption,
     handleBulkImport
   } = useTableState();
 
@@ -88,6 +90,8 @@ const App = () => {
             rollHistory={rollHistory}
             tableModes={tableModes}
             onUpdateTableMode={handleUpdateTableMode}
+            condenseOptions={condenseOptions}
+            onToggleCondenseOption={handleToggleCondenseOption}
           />
         </Layout>
       ),
@@ -108,6 +112,8 @@ const App = () => {
             rollHistory={rollHistory}
             tableModes={tableModes}
             onUpdateTableMode={handleUpdateTableMode}
+            condenseOptions={condenseOptions}
+            onToggleCondenseOption={handleToggleCondenseOption}
           />
         </Layout>
       ),

@@ -3,7 +3,7 @@ import { rollOnTable, parseDiceNotation } from '../utils/tableUtils';
 import { TEXT } from '../constants/text';
 import './RollMode.css';
 
-const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => {
+const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory, isCondensed = false, onToggleCondense }) => {
   // Internal state for tracking the current roll
   const [currentRoll, setCurrentRoll] = useState(null);
   // Internal state for tracking roll counts
@@ -14,6 +14,8 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   const [rolledIndex, setRolledIndex] = useState(null);
   // Track if we're currently processing a roll to prevent infinite recursion
   const [isRolling, setIsRolling] = useState(false);
+  // Internal state for condensed view option
+  const [condensed, setCondensed] = useState(isCondensed);
   // Ref for the highlighted row
   const highlightedRowRef = useRef(null);
   // Ref for the table container
@@ -23,6 +25,11 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
   useEffect(() => {
     setCurrentRollStyle(rollStyle);
   }, [rollStyle]);
+  
+  // Update internal condensed state when prop changes
+  useEffect(() => {
+    setCondensed(isCondensed);
+  }, [isCondensed]);
   
   // Initialize from props when component mounts or rollHistory changes
   useEffect(() => {
@@ -87,8 +94,11 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     // Get the current history for this table
     const tableHistory = rollHistory[table.id] || {};
     
+    // For noRepeat mode, we need to pass the actual counts to ensure we don't roll the same item twice
+    const historyForRoll = currentRollStyle === 'noRepeat' ? rollCounts : tableHistory.counts || {};
+    
     // Roll on the table
-    const rollResult = rollOnTable(table, currentRollStyle, tableHistory);
+    const rollResult = rollOnTable(table, currentRollStyle, historyForRoll);
     
     if (!rollResult) {
       // All items have been rolled, need to reset
@@ -143,6 +153,15 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
     onResetHistory(table.id);
   };
 
+  // Function to toggle condensed view
+  const handleToggleCondense = () => {
+    const newCondensed = !condensed;
+    setCondensed(newCondensed);
+    if (onToggleCondense) {
+      onToggleCondense(newCondensed);
+    }
+  };
+
   // Function to copy the roll result to clipboard
   const handleCopyResult = useCallback(() => {
     if (!currentRoll) return;
@@ -163,22 +182,112 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
       });
   }, [currentRoll]);
 
+  // Function to condense consecutive duplicate items
+  const getCondensedItems = useCallback(() => {
+    if (!table || !table.items) {
+      return [];
+    }
+
+    // If not condensed, just map each item with its roll status
+    if (!condensed) {
+      return table.items.map((item, index) => {
+        // For no-repeat mode, an item is considered rolled if it has a roll count > 0
+        const isRolled = currentRollStyle === 'noRepeat' && (rollCounts[index] || 0) > 0;
+        
+        return { 
+          item, 
+          index, 
+          startIndex: index, 
+          endIndex: index,
+          isRolled,
+          rollCount: rollCounts[index] || 0,
+          rolledIndices: isRolled ? [index] : []
+        };
+      });
+    }
+
+    const condensedItems = [];
+    let currentGroup = null;
+
+    table.items.forEach((item, index) => {
+      // For all modes, we need to consider the item text
+      if (!currentGroup) {
+        // Start a new group
+        currentGroup = { 
+          item, 
+          index, 
+          startIndex: index, 
+          endIndex: index,
+          rollCount: rollCounts[index] || 0,
+          rolledIndices: rollCounts[index] > 0 ? [index] : []
+        };
+      } else if (currentGroup.item === item) {
+        // Extend the current group
+        currentGroup.endIndex = index;
+        // Add to the total roll count for this group
+        currentGroup.rollCount += (rollCounts[index] || 0);
+        // Track which indices in the group have been rolled (for noRepeat mode)
+        if (rollCounts[index] > 0) {
+          currentGroup.rolledIndices.push(index);
+        }
+      } else {
+        // End the current group and start a new one
+        condensedItems.push(currentGroup);
+        currentGroup = { 
+          item, 
+          index, 
+          startIndex: index, 
+          endIndex: index,
+          rollCount: rollCounts[index] || 0,
+          rolledIndices: rollCounts[index] > 0 ? [index] : []
+        };
+      }
+    });
+
+    // Add the last group
+    if (currentGroup) {
+      condensedItems.push(currentGroup);
+    }
+
+    return condensedItems;
+  }, [table, condensed, currentRollStyle, rollCounts]);
+
+  // Calculate the total number of items that have been rolled in noRepeat mode
+  const getTotalRolledItems = useCallback(() => {
+    if (!table || !table.items || currentRollStyle !== 'noRepeat') {
+      return 0;
+    }
+    
+    return Object.values(rollCounts).filter(count => count > 0).length;
+  }, [table, rollCounts, currentRollStyle]);
+
   return (
     <div className="roll-mode" data-testid="roll-mode">
       <h2 data-testid="roll-table-title">{TEXT.roll.title}</h2>
       <div className="roll-controls" data-testid="roll-controls">
-        <select 
-          value={currentRollStyle} 
-          onChange={(e) => handleStyleChange(e.target.value)}
-          data-testid="roll-style-select"
-        >
-          <option value="normal" data-testid="roll-style-normal">{TEXT.roll.styles.normal}</option>
-          <option value="weighted" data-testid="roll-style-weighted">{TEXT.roll.styles.weighted}</option>
-          <option value="noRepeat" data-testid="roll-style-no-repeat">{TEXT.roll.styles.noRepeat}</option>
-        </select>
-        <button onClick={handleResetHistory} data-testid="reset-history-button">
-          <i className="fas fa-history"></i> {TEXT.roll.resetButton}
-        </button>
+        <div className="roll-controls-group">
+          <select 
+            value={currentRollStyle} 
+            onChange={(e) => handleStyleChange(e.target.value)}
+            data-testid="roll-style-select"
+          >
+            <option value="normal" data-testid="roll-style-normal">{TEXT.roll.styles.normal}</option>
+            <option value="weighted" data-testid="roll-style-weighted">{TEXT.roll.styles.weighted}</option>
+            <option value="noRepeat" data-testid="roll-style-no-repeat">{TEXT.roll.styles.noRepeat}</option>
+          </select>
+          <button onClick={handleResetHistory} data-testid="reset-history-button">
+            <i className="fas fa-history"></i> {TEXT.roll.resetButton}
+          </button>
+          <label className="condense-option" title={TEXT.roll.condenseOption.tooltip}>
+            <input 
+              type="checkbox" 
+              checked={condensed} 
+              onChange={handleToggleCondense} 
+              data-testid="condense-checkbox"
+            />
+            {TEXT.roll.condenseOption.label}
+          </label>
+        </div>
       </div>
       
       {currentRoll && (
@@ -197,31 +306,59 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory }) => 
         </div>
       )}
       
+      {currentRollStyle === 'noRepeat' && (
+        <div className="roll-progress">
+          <span className="roll-progress-text">
+            {TEXT.roll.noRepeatCount.format.replace('{rolled}', getTotalRolledItems()).replace('{total}', table?.items?.length || 0)}
+          </span>
+          <div className="roll-progress-bar">
+            <div 
+              className="roll-progress-fill" 
+              style={{ width: `${table?.items?.length ? (getTotalRolledItems() / table.items.length) * 100 : 0}%` }}
+            ></div>
+          </div>
+        </div>
+      )}
+      
       <div className="roll-table" ref={tableContainerRef} data-testid="roll-table-container">
         <table>
           <tbody>
-            {table.items.map((item, index) => {
-              const count = rollCounts[index] || 0;
-              const isHighlighted = index === rolledIndex;
-              const isRolled = currentRollStyle === 'noRepeat' && count > 0;
+            {getCondensedItems().map((item) => {
+              const isHighlighted = rolledIndex !== null && item.startIndex <= rolledIndex && rolledIndex <= item.endIndex;
+              const isCondensed = item.startIndex !== item.endIndex;
+              const itemCount = item.endIndex - item.startIndex + 1;
+              const rolledCount = item.rolledIndices?.length || 0;
+              
+              // For noRepeat mode, an item is considered rolled if any of its indices have been rolled
+              // or if the isRolled flag is set (for non-condensed view)
+              const isRolled = currentRollStyle === 'noRepeat' && (rolledCount > 0 || item.isRolled);
               
               return (
                 <tr 
-                  key={index} 
+                  key={item.startIndex} 
                   className={`
                     ${isHighlighted ? 'highlighted' : ''}
-                    ${isRolled ? 'rolled' : ''}
+                    ${isRolled && !isCondensed ? 'rolled' : ''}
                   `}
                   ref={isHighlighted ? highlightedRowRef : null}
-                  data-testid={`roll-table-row-${index}`}
+                  data-testid={`roll-table-row-${item.startIndex}`}
                 >
-                  <td data-testid={`roll-table-item-${index}`}>{index + 1}</td>
-                  <td>
-                    {item}
-                    {/* Only show counts for weighted mode */}
-                    {currentRollStyle === 'weighted' && count > 0 && (
-                      <span className="roll-count" data-testid={`roll-count-${index}`}>
-                        ({count} {count === 1 ? TEXT.roll.rollCount.singular : TEXT.roll.rollCount.plural})
+                  <td data-testid={`roll-table-item-${item.startIndex}`}>
+                    {isCondensed ? `${item.startIndex + 1}-${item.endIndex + 1}` : (item.startIndex + 1)}
+                  </td>
+                  <td className={isRolled ? 'rolled-text' : ''}>
+                    {item.item}
+                    {/* Show counts for weighted mode */}
+                    {currentRollStyle === 'weighted' && item.rollCount > 0 && (
+                      <span className="roll-count" data-testid={`roll-count-${item.startIndex}`}>
+                        ({item.rollCount} {item.rollCount === 1 ? TEXT.roll.rollCount.singular : TEXT.roll.rollCount.plural})
+                      </span>
+                    )}
+                    
+                    {/* For condensed items in noRepeat mode, show how many are rolled */}
+                    {currentRollStyle === 'noRepeat' && isCondensed && (
+                      <span className="roll-count" data-testid={`roll-count-${item.startIndex}`}>
+                        ({rolledCount}/{itemCount} rolled)
                       </span>
                     )}
                   </td>
