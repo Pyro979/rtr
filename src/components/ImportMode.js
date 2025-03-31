@@ -86,9 +86,12 @@ const ImportMode = ({ onImport }) => {
       items: tableData.items
     };
 
+    // Call the onImport handler from props to handle the state update
+    // This is the single source of truth for updating tables
     onImport(newTable);
     
-    // Update existing tables with the new one
+    // Update our local reference to existing tables
+    // But don't directly modify localStorage - that's handled by the parent component
     setExistingTables([...existingTables, newTable]);
     
     // Set success state instead of navigating away

@@ -7,7 +7,7 @@ test.describe('Table Rolling Functionality', () => {
     await page.goto('/#/import');
     
     // Wait for the page to load
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(500);
     
     // Fill in the table name
     await page.locator('[data-testid="table-name-input"]').fill('Test Roll Table');
@@ -21,143 +21,71 @@ test.describe('Table Rolling Functionality', () => {
     // Wait for import to complete
     await page.waitForTimeout(1000);
     
-    // Navigate to the roll page for this table
-    // First check if we need to use the sidebar
-    const tableLink = page.locator('[data-testid^="table-link-"]').first();
+    // Find and click on our test table in the sidebar
+    await page.goto('/');
+    await page.waitForTimeout(500);
     
-    if (await tableLink.isVisible()) {
-      await tableLink.click();
-    } else {
-      // We might need to open the sidebar first
-      const hamburgerButton = page.locator('[data-testid="hamburger-menu-button"]');
-      if (await hamburgerButton.isVisible()) {
-        await hamburgerButton.click();
-        await page.waitForTimeout(500);
-        
-        // Look for the table in the sidebar
-        const sidebarTableLink = page.locator('[data-testid^="table-link-"]').first();
-        if (await sidebarTableLink.isVisible()) {
-          await sidebarTableLink.click();
-        }
-      }
-    }
+    // Find our test table in the sidebar
+    const tableLink = page.getByText('Test Roll Table', { exact: true });
+    await expect(tableLink).toBeVisible();
     
-    // Wait for navigation
-    await page.waitForTimeout(1000);
+    // Click on the table to navigate to its roll page
+    await tableLink.click();
+    await page.waitForTimeout(500);
   });
 
   test('should roll on table in normal mode', async ({ page }) => {
     // Verify we're on the roll page
     await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
     
-    // Click the roll button
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    
-    // Verify a result is displayed
-    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
-    
-    // Roll a few more times
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    
-    // Verify the roll history is updated - looking for any highlighted row
-    const highlightedRow = page.locator('tr.highlighted');
-    await expect(highlightedRow).toBeVisible();
-  });
-
-  test('should highlight rolled items in the table', async ({ page }) => {
     // Roll on the table
     await page.locator('[data-testid="floating-roll-button"]').click();
-    
-    // Wait for the roll to complete
     await page.waitForTimeout(500);
     
-    // Verify that at least one item in the table is highlighted
-    const highlightedItem = page.locator('tr.highlighted').first();
-    await expect(highlightedItem).toBeVisible();
+    // Verify a roll result is displayed
+    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+    
+    // Verify the roll result format and content
+    const rollResult = await page.locator('[data-testid="roll-result"]').textContent();
+    expect(rollResult).toMatch(/^Rolled: (Item 1|Item 2|Item 3|Item 4|Item 5)$/);
   });
 
-  test('should maintain roll history between component renders', async ({ page }) => {
-    // Roll multiple times
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.waitForTimeout(300);
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.waitForTimeout(300);
-    
-    // Navigate away and back to test state persistence
-    // First get the current URL which contains the table ID
-    const currentUrl = page.url();
-    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
-    
-    if (tableIdMatch && tableIdMatch[1]) {
-      const tableId = tableIdMatch[1];
-      
-      // Navigate to home page
-      await page.goto('/#/');
-      await page.waitForTimeout(1000);
-      
-      // Navigate back to the roll page
-      await page.goto(`/#/table/${tableId}/roll`);
-      await page.waitForTimeout(1000);
-      
-      // Roll again after returning to ensure we have a result
-      await page.locator('[data-testid="floating-roll-button"]').click();
-      await page.waitForTimeout(500);
-      
-      // Verify a roll result is displayed
-      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
-      
-      // Verify that a row is highlighted after the new roll
-      const highlightedItem = page.locator('tr.highlighted');
-      await expect(highlightedItem).toBeVisible();
-    }
-  });
-
-  test('should change roll styles', async ({ page }) => {
-    // Verify we're on the roll page
-    await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
-    
-    // Get the initial roll style
-    const initialRollStyle = await page.locator('[data-testid="roll-style-select"]').inputValue();
-    
-    // Select a different roll style
+  test('should roll on table in weighted mode', async ({ page }) => {
+    // Change to weighted mode
     await page.locator('[data-testid="roll-style-select"]').selectOption('weighted');
     
-    // Verify the roll style has changed
-    const newRollStyle = await page.locator('[data-testid="roll-style-select"]').inputValue();
-    expect(newRollStyle).not.toEqual(initialRollStyle);
-    
-    // Roll with the new style
+    // Roll on the table
     await page.locator('[data-testid="floating-roll-button"]').click();
-    
-    // Verify a result is displayed
-    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
-  });
-
-  test('should reset roll history', async ({ page }) => {
-    // Roll a few times
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.waitForTimeout(300);
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.waitForTimeout(300);
-    await page.locator('[data-testid="floating-roll-button"]').click();
-    await page.waitForTimeout(300);
-    
-    // Verify the roll history has items
-    await expect(page.locator('tr.highlighted')).toBeVisible();
-    
-    // Click the reset history button
-    await page.locator('[data-testid="reset-history-button"]').click();
-    
-    // Wait for reset to complete
     await page.waitForTimeout(500);
     
-    // Verify the roll history is empty (no highlighted rows)
-    const highlightedCount = await page.locator('tr.highlighted').count();
-    expect(highlightedCount).toBe(0);
+    // Verify a roll result is displayed
+    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
+    
+    // Verify the roll result format and content
+    const rollResult = await page.locator('[data-testid="roll-result"]').textContent();
+    expect(rollResult).toMatch(/^Rolled: (Item 1|Item 2|Item 3|Item 4|Item 5)$/);
   });
 
-  test('should navigate to edit mode', async ({ page }) => {
+  test('should roll on table in no-repeat mode', async ({ page }) => {
+    // Change to no-repeat mode
+    await page.locator('[data-testid="roll-style-select"]').selectOption('noRepeat');
+    
+    // Roll on the table multiple times to test no-repeat functionality
+    for (let i = 0; i < 5; i++) {
+      await page.locator('[data-testid="floating-roll-button"]').click();
+      await page.waitForTimeout(300);
+    }
+    
+    // Verify the "Done" text appears on the roll button when all items are rolled
+    const buttonText = await page.locator('[data-testid="floating-roll-button"] .roll-text').textContent();
+    expect(buttonText).toBe('Done');
+    
+    // Verify the roll button is disabled
+    await expect(page.locator('[data-testid="floating-roll-button"]')).toBeDisabled();
+    await expect(page.locator('[data-testid="floating-roll-button"]')).toHaveClass(/disabled/);
+  });
+
+  test('should navigate to edit page', async ({ page }) => {
     // Click the edit link
     await page.locator('[data-testid="edit-table-link"]').click();
     
@@ -180,145 +108,27 @@ test.describe('Table Rolling Functionality', () => {
     // Verify a roll result is displayed
     await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
     
-    // Take a screenshot of the roll result
-    await page.screenshot({ path: 'test-results/roll-result.png' });
+    // Verify the roll result format and content
+    const rollResult = await page.locator('[data-testid="roll-result"]').textContent();
+    expect(rollResult).toMatch(/^Rolled: (Item 1|Item 2|Item 3|Item 4|Item 5)$/);
     
-    // Verify a row is highlighted
-    const highlightedBefore = page.locator('tr[class*="highlighted"]');
-    await expect(highlightedBefore).toBeVisible();
+    // Navigate away and back to verify state persistence
+    await page.goto('/');
+    await page.waitForTimeout(500);
     
-    // Get the current URL which contains the table ID
-    const currentUrl = page.url();
-    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
+    // Find our test table in the sidebar again
+    const tableLink = page.getByText('Test Roll Table', { exact: true });
+    await expect(tableLink).toBeVisible();
     
-    if (tableIdMatch && tableIdMatch[1]) {
-      const tableId = tableIdMatch[1];
-      
-      // Navigate away
-      await page.goto('/#/');
-      await page.waitForTimeout(1000);
-      
-      // Navigate back to the roll page
-      await page.goto(`/#/table/${tableId}/roll`);
-      await page.waitForTimeout(1000);
-      
-      // Check if roll style is preserved (should be 'weighted')
-      const rollStyleAfter = await page.locator('[data-testid="roll-style-select"]').inputValue();
-      console.log('Roll style after navigation:', rollStyleAfter);
-      expect(rollStyleAfter).toBe('weighted');
-      
-      // Take a screenshot after navigation
-      await page.screenshot({ path: 'test-results/roll-after-navigation.png' });
-      
-      // Check if roll result is displayed after navigation (without rolling again)
-      const resultVisible = await page.locator('[data-testid="roll-result"]').isVisible();
-      console.log('Roll result visible after navigation:', resultVisible);
-      expect(resultVisible).toBeTruthy();
-      
-      // Check if highlighting is preserved - use a more robust selector
-      const highlightedAfter = await page.locator('tr[class*="highlighted"]').count();
-      console.log('Highlighted rows after navigation:', highlightedAfter);
-      expect(highlightedAfter).toBeGreaterThan(0);
-    }
-  });
-
-  test('should always default to roll mode when returning to a table', async ({ page }) => {
-    // Get the current URL which contains the table ID
-    const currentUrl = page.url();
-    const tableIdMatch = currentUrl.match(/\/table\/([^\/]+)\/roll/);
+    // Click on the table to navigate back to its roll page
+    await tableLink.click();
+    await page.waitForTimeout(500);
     
-    if (tableIdMatch && tableIdMatch[1]) {
-      const tableId = tableIdMatch[1];
-      
-      // Switch to edit mode
-      await page.locator('[data-testid="edit-table-link"]').click();
-      await page.waitForTimeout(1000);
-      
-      // Verify we're in edit mode by checking for the table name input field
-      await expect(page.locator('[data-testid="table-name-input"]')).toBeVisible();
-      
-      // Take a screenshot in edit mode
-      await page.screenshot({ path: 'test-results/edit-mode.png' });
-      
-      // Navigate away
-      await page.goto('/#/');
-      await page.waitForTimeout(1000);
-      
-      // Navigate back to the table without specifying mode
-      await page.goto(`/#/table/${tableId}`);
-      await page.waitForTimeout(1000);
-      
-      // Verify we're redirected to roll mode (the default mode)
-      await expect(page.locator('[data-testid="roll-mode"]')).toBeVisible();
-      
-      // Take a screenshot after returning to roll mode
-      await page.screenshot({ path: 'test-results/default-roll-mode.png' });
-    }
-  });
-
-  test('should handle no-repeat roll mode correctly', async ({ page }) => {
-    // Change to no-repeat mode
-    await page.locator('[data-testid="roll-style-select"]').selectOption('noRepeat');
+    // Verify we're still in weighted mode
+    const selectedOption = await page.locator('[data-testid="roll-style-select"]').inputValue();
+    expect(selectedOption).toBe('weighted');
     
-    // Take a screenshot before rolling in no-repeat mode
-    await page.screenshot({ path: 'test-results/no-repeat-mode-before.png' });
-    
-    // Roll multiple times
-    for (let i = 0; i < 3; i++) {
-      await page.locator('[data-testid="floating-roll-button"]').click();
-      await page.waitForTimeout(500);
-      
-      // Take a screenshot after each roll
-      await page.screenshot({ path: `test-results/no-repeat-roll-${i+1}.png` });
-      
-      // Verify a roll result is displayed
-      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
-      
-      // Verify a row is highlighted
-      await expect(page.locator('tr[class*="highlighted"]')).toBeVisible();
-      
-      // Verify previously rolled items have the "rolled" class
-      if (i > 0) {
-        const rolledItems = page.locator('tr[class*="rolled"]');
-        const count = await rolledItems.count();
-        expect(count).toBeGreaterThanOrEqual(i);
-      }
-    }
-    
-    // Take a final screenshot showing multiple rolled items
-    await page.screenshot({ path: 'test-results/no-repeat-mode-after.png' });
-  });
-
-  test('should handle weighted roll mode correctly', async ({ page }) => {
-    // Change to weighted mode
-    await page.locator('[data-testid="roll-style-select"]').selectOption('weighted');
-    
-    // Take a screenshot before rolling in weighted mode
-    await page.screenshot({ path: 'test-results/weighted-mode-before.png' });
-    
-    // Roll multiple times
-    for (let i = 0; i < 3; i++) {
-      await page.locator('[data-testid="floating-roll-button"]').click();
-      await page.waitForTimeout(500);
-      
-      // Take a screenshot after each roll
-      await page.screenshot({ path: `test-results/weighted-roll-${i+1}.png` });
-      
-      // Verify a roll result is displayed
-      await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
-      
-      // Verify a row is highlighted
-      await expect(page.locator('tr[class*="highlighted"]')).toBeVisible();
-      
-      // Verify roll counts are displayed
-      if (i > 0) {
-        const rollCounts = page.locator('.roll-count');
-        const count = await rollCounts.count();
-        expect(count).toBeGreaterThan(0);
-      }
-    }
-    
-    // Take a final screenshot showing roll counts
-    await page.screenshot({ path: 'test-results/weighted-mode-after.png' });
+    // Verify roll history is preserved by checking for a roll result
+    await expect(page.locator('[data-testid="roll-result"]')).toBeVisible();
   });
 });

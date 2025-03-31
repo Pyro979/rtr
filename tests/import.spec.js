@@ -28,8 +28,16 @@ test.describe('Table Import Functionality', () => {
     // Take a screenshot after import
     await page.screenshot({ path: 'test-results/after-import.png' });
     
-    // Verify the table appears in the sidebar
-    // First check if we need to open the sidebar
+    // Wait for the sidebar to update
+    await page.waitForTimeout(1000);
+    
+    // Navigate to home and back to ensure the sidebar fully refreshes
+    await page.goto('/');
+    await page.waitForTimeout(500);
+    await page.goto('/#/import');
+    await page.waitForTimeout(500);
+    
+    // Open the sidebar if it's not already open
     const sidebarButton = page.locator('[data-testid="hamburger-menu-button"]');
     if (await sidebarButton.isVisible()) {
       await sidebarButton.click();
@@ -40,10 +48,10 @@ test.describe('Table Import Functionality', () => {
     await page.screenshot({ path: 'test-results/sidebar-with-imported-table.png' });
     
     // Check for the table in the sidebar using data-testid
-    await expect(page.locator('[data-testid^="table-link-"]')).toBeVisible();
+    const tableLinks = page.locator('[data-testid^="table-link-"]');
+    await expect(tableLinks.first()).toBeVisible();
     
     // Verify at least one table link contains our table name
-    const tableLinks = page.locator('[data-testid^="table-link-"]');
     const count = await tableLinks.count();
     let foundTable = false;
     
@@ -128,5 +136,73 @@ test.describe('Table Import Functionality', () => {
     expect(textareaContent).toContain('Item Two');
     expect(textareaContent).toContain('Item Three');
     expect(textareaContent).toContain('Item Four');
+  });
+
+  test('should import multiple tables successfully', async ({ page }) => {
+    // Import first table
+    await page.locator('[data-testid="table-name-input"]').fill('Test Import Table 1');
+    await page.locator('[data-testid="table-content-textarea"]').fill('Item 1\nItem 2\nItem 3');
+    await page.locator('[data-testid="import-button"]').click();
+    
+    // Verify success message appears
+    await expect(page.locator('[data-testid="import-success"]')).toBeVisible();
+    
+    // Wait for the sidebar to update
+    await page.waitForTimeout(1000);
+    
+    // Import second table
+    await page.locator('[data-testid="table-name-input"]').fill('Test Import Table 2');
+    await page.locator('[data-testid="table-content-textarea"]').fill('Item A\nItem B\nItem C');
+    await page.locator('[data-testid="import-button"]').click();
+    
+    // Verify success message appears
+    await expect(page.locator('[data-testid="import-success"]')).toBeVisible();
+    
+    // Wait for the sidebar to update
+    await page.waitForTimeout(1000);
+       
+    // Import third table
+    await page.locator('[data-testid="table-name-input"]').fill('Test Import Table 3');
+    await page.locator('[data-testid="table-content-textarea"]').fill('Item X\nItem Y\nItem Z');
+    await page.locator('[data-testid="import-button"]').click();
+    
+    // Verify success message appears
+    await expect(page.locator('[data-testid="import-success"]')).toBeVisible();
+    
+    // Wait for the sidebar to update
+    await page.waitForTimeout(1000);
+    
+    // Open the sidebar if it's not already open
+    const sidebarButton = page.locator('[data-testid="hamburger-menu-button"]');
+    if (await sidebarButton.isVisible()) {
+      await sidebarButton.click();
+      await page.waitForTimeout(500);
+    }
+    
+    // Take a screenshot of the sidebar with all imported tables
+    await page.screenshot({ path: 'test-results/sidebar-with-multiple-imported-tables.png' });
+    
+    // Check for all three tables in the sidebar
+    const tableLinks = page.locator('[data-testid^="table-link-"]');
+    await expect(tableLinks.first()).toBeVisible();
+    
+    // Verify all three table links are present
+    const count = await tableLinks.count();
+    const tableNames = ['Test Import Table 1', 'Test Import Table 2', 'Test Import Table 3'];
+    const foundTables = [false, false, false];
+    
+    for (let i = 0; i < count; i++) {
+      const text = await tableLinks.nth(i).textContent();
+      for (let j = 0; j < tableNames.length; j++) {
+        if (text.includes(tableNames[j])) {
+          foundTables[j] = true;
+        }
+      }
+    }
+    
+    // Verify all three tables were found
+    expect(foundTables[0]).toBeTruthy();
+    expect(foundTables[1]).toBeTruthy();
+    expect(foundTables[2]).toBeTruthy();
   });
 });

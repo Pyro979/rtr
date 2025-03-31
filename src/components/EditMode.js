@@ -62,6 +62,9 @@ const EditMode = ({ table, onUpdate, onDelete, onDuplicate }) => {
     ));
     
     setHasChanges(false);
+    
+    // Navigate back to the roll page after saving
+    navigate(`/table/${table.id}/roll`);
   };
 
   const handleDelete = () => {

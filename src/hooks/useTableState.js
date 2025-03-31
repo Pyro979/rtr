@@ -59,6 +59,11 @@ const DEFAULT_WEATHER_TABLE = {
   name: 'Defaults\\Random Weather [env] #default',
   items: [
     'Clear skies and mild temperature', 
+    'Clear skies and mild temperature', 
+    'Clear skies and mild temperature', 
+    'Clear skies and mild temperature', 
+    'Clear skies and mild temperature', 
+    'Clear skies and mild temperature', 
     'Overcast with light breeze', 
     'Heavy rain for 1d4 hours', 
     'Dense fog until midday', 
@@ -91,13 +96,68 @@ const DEFAULT_WEATHER_TABLE = {
   ]
 };
 
+const DEFAULT_TAVERN_TABLE = {
+  id: uuidv4(),
+  name: 'Defaults\\Random Tavern [tavern] #default',
+  items: [
+    'The Red Griffin Inn', 
+    'The Drunken Dragon', 
+    'The Rusty Goblet', 
+    'The Black Boar Tavern', 
+    'The Silver Stag Inn', 
+    'The Green Griffin Tavern', 
+    'The Blue Moon Inn', 
+    'The Golden Griffin Tavern', 
+    'The White Horse Inn', 
+    'The King\'s Head Tavern', 
+    'The Queen\'s Rest Inn', 
+    'The Traveler\'s Rest', 
+    'The Wanderer\'s Inn', 
+    'The Adventurer\'s Guild Tavern', 
+    'The Mages\' Tower Tavern', 
+    'The Thieves\' Guild Tavern', 
+    'The City Guard Tavern', 
+    'The Merchant\'s Guild Tavern', 
+    'The Harbor Master\'s Tavern', 
+    'The Lighthouse Inn'
+  ]
+};
+
+const DEFAULT_NPC_TABLE = {
+  id: uuidv4(),
+  name: 'Defaults\\Random NPC [npc] #default',
+  items: [
+    'Human Fighter', 
+    'Dwarf Cleric', 
+    'Elf Ranger', 
+    'Halfling Rogue', 
+    'Dragonborn Barbarian', 
+    'Tiefling Warlock', 
+    'Gnome Bard', 
+    'Half-Elf Paladin', 
+    'Half-Orc Monk', 
+    'Goliath Druid', 
+    'Aarakocra Sorcerer', 
+    'Genasi Wizard', 
+    'Kobold', 
+    'Gnoll', 
+    'Orc', 
+    'Goblin', 
+    'Hobgoblin', 
+    'Bugbear', 
+    'Kobold Inventor', 
+    'Gnoll Pack Lord', 
+    'Orc Warlord'
+  ]
+};
+
 export const useTableState = () => {
   // Initialize state with data from localStorage
   const [tables, setTables] = useState(() => {
     const storedTables = localStorage.getItem(STORAGE_KEY);
     if (!storedTables) {
       // First time loading the app, create default tables
-      const initialTables = [DEFAULT_ENEMIES_TABLE, DEFAULT_TREASURE_TABLE, DEFAULT_WEATHER_TABLE];
+      const initialTables = [DEFAULT_ENEMIES_TABLE, DEFAULT_TREASURE_TABLE, DEFAULT_WEATHER_TABLE, DEFAULT_TAVERN_TABLE, DEFAULT_NPC_TABLE];
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTables));
       console.log('Initializing tables state with default tables:', initialTables);
       return initialTables;
@@ -183,8 +243,11 @@ export const useTableState = () => {
   const handleImport = (newTable) => {
     console.log('Importing table:', newTable);
     
+    // Get the latest tables from localStorage to ensure we have the most up-to-date list
+    const currentTables = loadTables();
+    
     // Create a completely new array to ensure React detects the change
-    const updatedTables = [...tables, newTable];
+    const updatedTables = [...currentTables, newTable];
     
     // Force an update by setting state with the new array
     setTables(updatedTables);
@@ -351,13 +414,35 @@ export const useTableState = () => {
   const handleResetAllHistory = () => {
     console.log('Resetting all roll history and tables');
     
-    // Clear the roll history
+    // Clear all state
     setRollHistory({});
+    setCondenseOptions({});
+    setTableModes({});
     
-    // Clear localStorage for roll history
+    // Clear all localStorage keys
     localStorage.removeItem(ROLL_HISTORY_KEY);
+    localStorage.removeItem(CONDENSE_OPTIONS_KEY);
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(TABLE_MODES_KEY);
+    localStorage.removeItem('importPreferences');
+    localStorage.removeItem('folderState');
     
-    console.log('All roll history reset');
+    // Restore default tables
+    const defaultTables = [
+      DEFAULT_ENEMIES_TABLE,
+      DEFAULT_TREASURE_TABLE,
+      DEFAULT_WEATHER_TABLE,
+      DEFAULT_TAVERN_TABLE,
+      DEFAULT_NPC_TABLE
+    ];
+    
+    // Set the default tables in state
+    setTables(defaultTables);
+    
+    // Save default tables to localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultTables));
+    
+    console.log('All data reset and default tables restored');
   };
 
   // Function to update the mode for a specific table

@@ -14,10 +14,16 @@ const TableList = ({ tables = [], onLinkClick, searchTerm = '' }) => {
     // Initialize from localStorage if available
     try {
       const savedState = localStorage.getItem(FOLDER_STATE_KEY);
-      return savedState ? JSON.parse(savedState) : {};
+      if (savedState) {
+        return JSON.parse(savedState);
+      } else {
+        // If no saved state, initialize with Defaults folder expanded
+        return { 'Defaults': true };
+      }
     } catch (error) {
       console.error('Error loading folder state:', error);
-      return {};
+      // Default to having Defaults folder expanded
+      return { 'Defaults': true };
     }
   });
 

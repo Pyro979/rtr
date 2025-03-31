@@ -466,12 +466,14 @@ const OptionsPage = ({ onResetAllHistory, onImport, onBulkImport }) => {
               value={confirmText}
               onChange={(e) => setConfirmText(e.target.value)}
               placeholder={TEXT.options.sections.dataManagement.resetAllData.prompt.confirmText}
+              data-testid="reset-confirm-input"
             />
             <div className="reset-prompt-buttons">
               <button 
                 onClick={handleConfirmReset}
                 disabled={confirmText !== TEXT.options.sections.dataManagement.resetAllData.prompt.confirmText}
                 className={confirmText === TEXT.options.sections.dataManagement.resetAllData.prompt.confirmText ? 'confirm-button' : 'disabled-button'}
+                data-testid="reset-confirm-button"
               >
                 {TEXT.options.sections.dataManagement.resetAllData.prompt.confirmButton}
               </button>
