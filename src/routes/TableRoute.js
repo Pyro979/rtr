@@ -39,6 +39,22 @@ const TableRoute = ({
     }
   }, [tableId, isEditMode, onUpdateTableMode]);
   
+  // Update document title based on mode and table name
+  useEffect(() => {
+    const defaultTitle = 'RtR: Roll Table Roller';
+    
+    if (table && currentTableName) {
+      document.title = currentTableName;
+    } else {
+      document.title = defaultTitle;
+    }
+    
+    // Restore default title when component unmounts
+    return () => {
+      document.title = defaultTitle;
+    };
+  }, [table, currentTableName]);
+  
   // Custom update handler to update the name immediately
   const handleUpdateTable = (updatedTable) => {
     setCurrentTableName(updatedTable.name);
