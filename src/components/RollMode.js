@@ -261,6 +261,16 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory, isCon
     return Object.values(rollCounts).filter(count => count > 0).length;
   }, [table, rollCounts, currentRollStyle]);
 
+  // Function to check if the table has any duplicate items
+  const hasDuplicates = useCallback(() => {
+    if (!table || !table.items) {
+      return false;
+    }
+    
+    const uniqueItems = new Set(table.items);
+    return uniqueItems.size < table.items.length;
+  }, [table]);
+
   return (
     <div className="roll-mode" data-testid="roll-mode">
       <h2 data-testid="roll-table-title">{TEXT.roll.title}</h2>
@@ -278,15 +288,17 @@ const RollMode = ({ table, rollStyle, rollHistory, onRoll, onResetHistory, isCon
           <button onClick={handleResetHistory} data-testid="reset-history-button">
             <i className="fas fa-history"></i> {TEXT.roll.resetButton}
           </button>
-          <label className="condense-option" title={TEXT.roll.condenseOption.tooltip}>
-            <input 
-              type="checkbox" 
-              checked={condensed} 
-              onChange={handleToggleCondense} 
-              data-testid="condense-checkbox"
-            />
-            {TEXT.roll.condenseOption.label}
-          </label>
+          {hasDuplicates() && (
+            <label className="condense-option" title={TEXT.roll.condenseOption.tooltip}>
+              <input 
+                type="checkbox" 
+                checked={condensed} 
+                onChange={handleToggleCondense} 
+                data-testid="condense-checkbox"
+              />
+              {TEXT.roll.condenseOption.label}
+            </label>
+          )}
         </div>
       </div>
       

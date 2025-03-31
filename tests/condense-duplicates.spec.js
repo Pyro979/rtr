@@ -389,4 +389,50 @@ test.describe('Condense Duplicates Functionality', () => {
       }
     }
   });
+
+  test('should only show condense option when table has duplicates', async ({ page }) => {
+    // First verify that our test table with duplicates shows the option
+    await expect(page.locator('[data-testid="condense-checkbox"]')).toBeVisible();
+    
+    // Now create a new table without duplicates
+    await page.goto('/#/import');
+    await page.waitForTimeout(500);
+    
+    // Make sure "Remove duplicates" option is unchecked
+    const removeDuplicatesCheckbox = page.locator('[data-testid="remove-duplicates-checkbox"]');
+    if (await removeDuplicatesCheckbox.isChecked()) {
+      await removeDuplicatesCheckbox.uncheck();
+    }
+    
+    await page.locator('[data-testid="table-name-input"]').fill('No Duplicates Table');
+    
+    // Create a table with no duplicates
+    await page.locator('[data-testid="table-content-textarea"]').fill(
+      'Item 1\nItem 2\nItem 3\nItem 4\nItem 5'
+    );
+    
+    await page.locator('[data-testid="import-button"]').click();
+    
+    // Wait for import to complete
+    await page.waitForTimeout(1000);
+    
+    // Navigate directly to the table's roll page using the URL
+    const tableId = await page.evaluate(() => {
+      const tables = JSON.parse(localStorage.getItem('randomTables') || '[]');
+      const table = tables.find(t => t.name === 'No Duplicates Table');
+      return table ? table.id : null;
+    });
+    
+    if (tableId) {
+      // Navigate directly to the table's roll page
+      await page.goto(`/#/table/${tableId}/roll`);
+      await page.waitForTimeout(1000);
+      
+      // Make sure the table is fully loaded
+      await expect(page.locator('[data-testid="roll-table-container"]')).toBeVisible();
+      
+      // The condense option should NOT be visible for a table without duplicates
+      await expect(page.locator('[data-testid="condense-checkbox"]')).not.toBeVisible();
+    }
+  });
 });
