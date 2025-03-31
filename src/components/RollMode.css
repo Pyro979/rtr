@@ -272,4 +272,6 @@ button.disabled {
 .condense-option input[type="checkbox"] {
   margin-right: 6px;
   cursor: pointer;
+  width: 16px;
+  height: 16px; 
 }
